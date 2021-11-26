@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, {useEffect}  from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import { Alert, BackHandler } from 'react-native';
+import Map from '../Map';
 
 export default function Fmenu({navigation}) {
 
@@ -14,7 +15,7 @@ export default function Fmenu({navigation}) {
 
     return (
         <View>
-            <Text>Você entrou no meu sistema!!!</Text>
+            <Map/>
         </View>
     );
 }
