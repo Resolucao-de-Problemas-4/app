@@ -22,17 +22,22 @@ export default function SignUp({ navigation }) {
   ) {
     const date =
       customerBirthdayDay +
-      "-" +
+      "/" +
       customerBirthdayMonth +
-      "-" +
+      "/" +
       customerBirthdayYear;
+
+      const data = new Date(date)
+      
+
+      console.log(data)
     axios
       .post("http://192.168.0.110:3030/api/users", {
-        customerName: customerName,
-        customerAddress: customerAddress,
-        customerEmail: customerEmail,
-        customerPassword: customerPassword,
-        customerBirthday: date,
+        "customerName": customerName,
+        "customerAddress": customerAddress,
+        "customerEmail": customerEmail,
+        "customerPassword": customerPassword,
+        "customerBirthday": data,
       })
       .then(function (response) {
         if (response.status === 201) {
