@@ -8,18 +8,25 @@ export default function Home({navigation}) {
     
 
     return (
-        <View>
-            <View>
+        <View style={styles.container}>
+            <View style={styles.view}>
                 <Button
                     title="Login"
-                    color="#f194ff"
+                    color="red"
                     onPress={() => navigation.navigate("Login")}
                 />
             </View>
-            <View>
+            <View style={styles.view}>
                 <Button
                     title="Register"
-                    color="#f194ff"
+                    color="blue"
+                    onPress={() => navigation.navigate("SignUp")}
+                />
+            </View>
+            <View style={styles.view}>
+                <Button
+                    title="Trabalhe conosco!"
+                    color="purple"
                     onPress={() => navigation.navigate("SignUp")}
                 />
             </View>
@@ -27,3 +34,34 @@ export default function Home({navigation}) {
     );
 }
 
+const styles = StyleSheet.create({
+    container: {
+      justifyContent: "center",
+      alignItems: "center",
+      flex: 1,
+      backgroundColor: 'rgb(200, 200, 200)'
+    },
+    view: {
+      height: "7%",
+    },
+    fieldInput: {
+      borderColor: "black",
+      borderWidth: 1,
+      borderRadius: 30,
+      textAlign: "center",
+      height: 35,
+      width: 250,
+      marginTop: 3,
+      marginBottom: 5,
+    },
+    text: {
+      fontFamily: "serif",
+      fontStyle: "italic",
+      fontWeight: "bold",
+      textAlign: "center",
+    },
+    date: {
+      width: "100%",
+      marginBottom: 25,
+    },
+  });
