@@ -10,7 +10,10 @@ import {
 } from "react-native";
 import axios from "axios";
 import DatePicker from "react-native-datepicker";
-import moment from "moment";
+import {API_REST} from '../api/api'
+import {USER_ROUTE} from '../api/user'
+import {PORT} from '../api/port'
+
 
 export default function SignUp({ navigation }) {
   const date = new Date();
@@ -61,7 +64,7 @@ export default function SignUp({ navigation }) {
     }
 
     axios
-      .post("http://192.168.0.6:3030/api/users", {
+      .post(API_REST+""+PORT+""+USER_ROUTE, {
         customerName: customerName,
         customerAddress: customerAddress,
         customerEmail: customerEmail,

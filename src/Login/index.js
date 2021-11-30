@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { StyleSheet, Text, View, TextInput, Alert, Button, Image } from "react-native";
+import {API_REST} from '../api/api'
+import {AUTH_ROUT} from '../api/auth'
+import {PORT} from '../api/port'
 
 export default function LogIn({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   function login(email, password) {
+    console.log(API_REST+""+PORT+"/"+AUTH_ROUT)
     axios
-      .post("http://192.168.0.6:3030/api/auth", {
+      .post(API_REST+""+PORT+"/"+AUTH_ROUT, {
         email: email,
         password: password,
       })
