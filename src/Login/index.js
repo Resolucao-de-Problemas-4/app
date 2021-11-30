@@ -8,7 +8,7 @@ export default function LogIn({ navigation }) {
 
   function login(email, password) {
     axios
-      .post("http://192.168.0.110:3030/api/auth", {
+      .post("http://192.168.0.6:3030/api/auth", {
         email: email,
         password: password,
       })

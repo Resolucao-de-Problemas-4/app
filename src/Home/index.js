@@ -5,8 +5,6 @@ import { Alert } from 'react-native';
 
 export default function Home({navigation}) {
 
-    
-
     return (
         <View style={styles.container}>
             <View style={styles.view}>
@@ -27,7 +25,7 @@ export default function Home({navigation}) {
                 <Button
                     title="Trabalhe conosco!"
                     color="purple"
-                    onPress={() => navigation.navigate("SignUp")}
+                    onPress={() => navigation.navigate("DriverSignUp")}
                 />
             </View>
         </View>
