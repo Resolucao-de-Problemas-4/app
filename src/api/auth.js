@@ -1,1 +1,0 @@
-export const AUTH_ROUT = 'api/auth'

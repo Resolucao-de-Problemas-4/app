@@ -7,26 +7,36 @@ export default function Home({navigation}) {
 
     return (
         <View style={styles.container}>
+
             <View style={styles.view}>
+                <Text> USER </Text>
                 <Button
                     title="Login"
                     color="red"
-                    onPress={() => navigation.navigate("Login")}
+                    onPress={() => navigation.navigate("ULogin")}
                 />
-            </View>
-            <View style={styles.view}>
+
                 <Button
-                    title="Register"
+                    title=".   .   .  Register  .   .   ."
                     color="blue"
-                    onPress={() => navigation.navigate("SignUp")}
+                    onPress={() => navigation.navigate("USignUp")}
                 />
+
             </View>
+
             <View style={styles.view}>
-                <Button
-                    title="Trabalhe conosco!"
-                    color="purple"
-                    onPress={() => navigation.navigate("DriverSignUp")}
-                />
+              <Text> DRIVER </Text>
+              <Button
+                  title="Login"
+                  color="red"
+                  onPress={() => navigation.navigate("DLogin")}S
+              />
+
+              <Button
+                title="Trabalhe conosco!"
+                color="blue"
+                onPress={() => navigation.navigate("DSignUp")}
+              />
             </View>
         </View>
     );
@@ -40,7 +50,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgb(200, 200, 200)'
     },
     view: {
-      height: "7%",
+      height: "15%",
     },
     fieldInput: {
       borderColor: "black",

@@ -10,66 +10,61 @@ import {
 } from "react-native";
 import axios from "axios";
 import DatePicker from "react-native-datepicker";
-import {API_REST} from '../api/api'
-import {USER_ROUTE} from '../api/user'
-import {PORT} from '../api/port'
+import moment from "moment";
+import { API_REST } from "../api/api";
+import { PORT } from "../api/port";
+import { AUTH_ROUT_DRIVER } from "../api/authdriver";
 
-
-export default function SignUp({ navigation }) {
-  const date = new Date();
-  const [customerName, setCustomerName] = useState("");
-  const [customerAddress, setCustomerAddress] = useState("");
-  const [customerEmail, setCustomerEmail] = useState("");
-  const [customerPassword, setCustomerPassword] = useState("");
-
-  const [Birthday, setBirthday] = useState(date);
+export default function DriverSignUp({ navigation }) {
+  const [driverName, setDriverName] = useState("");
+  const [driverCNH, setDriverCNH] = useState("");
+  const [driverAddress, setDriverAddress] = useState("");
+  const [driverEmail, setDriverEmail] = useState("");
+  const [driverPassword, setDriverPassword] = useState("");
 
   function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
-
-  function validateBirth(birth) {
-    var dates = new Date(birth);
-    var age = date.getFullYear() - dates.getFullYear();
-    return age;
+  function validateCNH(CNH) {
+    var re = /[0-9]{11}/;
+    return re.test(CNH);
   }
 
-  function registerUser(
-    customerName,
-    customerAddress,
-    customerEmail,
-    customerPassword,
-    Birthday
+  function registerDriver(
+    driverName,
+    driverCNH,
+    driverAddress,
+    driverEmail,
+    driverPassword,
   ) {
     if (
-      customerName == "" ||
-      customerAddress == "" ||
-      customerEmail == "" ||
-      customerPassword == "" ||
-      Birthday == ""
+      driverName == "" ||
+      driverCNH == "" ||
+      driverAddress == "" ||
+      driverEmail == "" ||
+      driverPassword == ""
     ) {
       console.log();
       Alert.alert("Preencha todos os campos!");
       return "Preencha os Campos";
     }
-    if (!validateEmail(customerEmail)) {
+    if (!validateEmail(driverEmail)) {
       Alert.alert("Insira um email valido");
       return "Preencha os Campos";
-    }
-    const age = validateBirth(Birthday);
-    if (age < 18) {
-      Alert.alert("Você não tem a idade mínima para se inscrever.");
+    }else if (!validateCNH(driverCNH)) {
+      Alert.alert("Insira uma CNH valida");
       return "Preencha os Campos";
     }
 
     axios
-      .post(API_REST+""+PORT+""+USER_ROUTE, {
-        customerName: customerName,
-        customerAddress: customerAddress,
-        customerEmail: customerEmail,
-        customerPassword: customerPassword,
-        customerBirthday: Birthday,
+      .post(API_REST+""+PORT+""+AUTH_ROUT_DRIVER, {
+        driverName: driverName,
+        driverCNH: driverCNH,
+        driverAddress: driverAddress,
+        driverEmail: driverEmail,
+        driverPassword: driverPassword,
+
       })
       .then(function (response) {
         if (response.status === 201) {
@@ -78,7 +73,7 @@ export default function SignUp({ navigation }) {
       })
       .catch(function (error) {
         console.log(error);
-        Alert.alert("Email já cadastrado.");
+        Alert.alert("Email ou CNH já cadastrado.");
       });
   }
 
@@ -94,18 +89,29 @@ export default function SignUp({ navigation }) {
         <TextInput
           style={styles.fieldInput}
           placeholder="Seu nome"
-          onChangeText={setCustomerName}
-          value={customerName}
+          onChangeText={setDriverName}
+          value={driverName}
         />
 
         <Text style={styles.text}>Password</Text>
         <TextInput
           style={styles.fieldInput}
           placeholder="Choose a password"
-          onChangeText={setCustomerPassword}
-          value={customerPassword}
+          onChangeText={setDriverPassword}
+          value={driverPassword}
           secureTextEntry
           autoCapitalize="none"
+        />
+
+        <Text style={styles.text}>CNH</Text>
+        <TextInput
+          style={styles.fieldInput}
+          placeholder="Type ur CNH"
+          //keyboardType="cnh"
+          onChangeText={setDriverCNH}
+          value={driverCNH}
+          autoCapitalize="none"
+
         />
 
         <Text style={styles.text}>E-Mail</Text>
@@ -113,40 +119,30 @@ export default function SignUp({ navigation }) {
           style={styles.fieldInput}
           placeholder="Choose an email address"
           keyboardType="email-address"
-          onChangeText={setCustomerEmail}
+          onChangeText={setDriverEmail}
+          value={driverEmail}
           autoCapitalize="none"
-          value={customerEmail}
         />
+
         <Text style={styles.text}>Endereço</Text>
         <TextInput
           style={styles.fieldInput}
           placeholder="Choose an email address"
-          onChangeText={setCustomerAddress}
-          value={customerAddress}
+          onChangeText={setDriverAddress}
+          value={driverAddress}
           autoCapitalize="none"
         />
-        <View>
-          <Text style={styles.text}>Data de Nascimento</Text>
 
-          <DatePicker
-            format="MM/DD/YYYY"
-            minDate="01/01/1970"
-            maxDate="01/01/2022"
-            value={Birthday}
-            style={styles.date}
-            onDateChange={setBirthday}
-          />
-        </View>
         <Button
           title="SignUp"
           color="red"
           onPress={() =>
-            registerUser(
-              customerName,
-              customerAddress,
-              customerEmail,
-              customerPassword,
-              Birthday
+            registerDriver(
+              driverName,
+              driverCNH,
+              driverAddress,
+              driverEmail,
+              driverPassword
             )
           }
         />

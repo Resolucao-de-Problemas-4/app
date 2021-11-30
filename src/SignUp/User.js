@@ -10,58 +10,65 @@ import {
 } from "react-native";
 import axios from "axios";
 import DatePicker from "react-native-datepicker";
-import moment from "moment";
+import { API_REST } from "../api/api";
+import { PORT } from "../api/port";
+import { AUTH_ROUT_USER } from "../api/authuser";
 
-export default function DriverSignUp({ navigation }) {
-  const [driverName, setDriverName] = useState("");
-  const [driverCNH, setDriverCNH] = useState("");
-  const [driverAddress, setDriverAddress] = useState("");
-  const [driverEmail, setDriverEmail] = useState("");
-  const [driverPassword, setDriverPassword] = useState("");
+export default function UserSignUp({ navigation }) {
+  const date = new Date();
+  const [customerName, setCustomerName] = useState("");
+  const [customerAddress, setCustomerAddress] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerPassword, setCustomerPassword] = useState("");
+
+  const [Birthday, setBirthday] = useState(date);
 
   function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
-  function validateCNH(CNH) {
-    var re = /[0-9]{11}/;
-    return re.test(CNH);
+
+  function validateBirth(birth) {
+    var dates = new Date(birth);
+    var age = date.getFullYear() - dates.getFullYear();
+    return age;
   }
 
-  function registerDriver(
-    driverName,
-    driverCNH,
-    driverAddress,
-    driverEmail,
-    driverPassword,
+  function registerUser(
+    customerName,
+    customerAddress,
+    customerEmail,
+    customerPassword,
+    Birthday
   ) {
     if (
-      driverName == "" ||
-      driverCNH == "" ||
-      driverAddress == "" ||
-      driverEmail == "" ||
-      driverPassword == ""
+      customerName == "" ||
+      customerAddress == "" ||
+      customerEmail == "" ||
+      customerPassword == "" ||
+      Birthday == ""
     ) {
       console.log();
       Alert.alert("Preencha todos os campos!");
       return "Preencha os Campos";
     }
-    if (!validateEmail(driverEmail)) {
+    if (!validateEmail(customerEmail)) {
       Alert.alert("Insira um email valido");
       return "Preencha os Campos";
-    }else if (!validateCNH(driverCNH)) {
-      Alert.alert("Insira uma CNH valida");
+    }
+    const age = validateBirth(Birthday);
+    if (age < 18) {
+      Alert.alert("Você não tem a idade mínima para se inscrever.");
       return "Preencha os Campos";
     }
 
     axios
-      .post("http://192.168.0.6:3030/api/drivers", {
-        driverName: driverName,
-        driverCNH: driverCNH,
-        driverAddress: driverAddress,
-        driverEmail: driverEmail,
-        driverPassword: driverPassword,
-
+      .post(API_REST + "" + PORT + "" + AUTH_ROUT_USER, {
+        customerName: customerName,
+        customerAddress: customerAddress,
+        customerEmail: customerEmail,
+        customerPassword: customerPassword,
+        customerBirthday: Birthday,
       })
       .then(function (response) {
         if (response.status === 201) {
@@ -70,7 +77,7 @@ export default function DriverSignUp({ navigation }) {
       })
       .catch(function (error) {
         console.log(error);
-        Alert.alert("Email ou CNH já cadastrado.");
+        Alert.alert("Email já cadastrado.");
       });
   }
 
@@ -81,34 +88,22 @@ export default function DriverSignUp({ navigation }) {
         source={{ uri: "https://i.imgur.com/0FltieF.png" }}
       />
       <View style={styles.view}>
-        
         <Text style={styles.text}>Username</Text>
         <TextInput
           style={styles.fieldInput}
           placeholder="Seu nome"
-          onChangeText={setDriverName}
-          value={driverName}
+          onChangeText={setCustomerName}
+          value={customerName}
         />
 
         <Text style={styles.text}>Password</Text>
         <TextInput
           style={styles.fieldInput}
           placeholder="Choose a password"
-          onChangeText={setDriverPassword}
-          value={driverPassword}
+          onChangeText={setCustomerPassword}
+          value={customerPassword}
           secureTextEntry
           autoCapitalize="none"
-        />
-
-        <Text style={styles.text}>CNH</Text>
-        <TextInput
-          style={styles.fieldInput}
-          placeholder="Type ur CNH"
-          //keyboardType="cnh"
-          onChangeText={setDriverCNH}
-          value={driverCNH}
-          autoCapitalize="none"
-
         />
 
         <Text style={styles.text}>E-Mail</Text>
@@ -116,30 +111,40 @@ export default function DriverSignUp({ navigation }) {
           style={styles.fieldInput}
           placeholder="Choose an email address"
           keyboardType="email-address"
-          onChangeText={setDriverEmail}
-          value={driverEmail}
+          onChangeText={setCustomerEmail}
           autoCapitalize="none"
+          value={customerEmail}
         />
-
         <Text style={styles.text}>Endereço</Text>
         <TextInput
           style={styles.fieldInput}
           placeholder="Choose an email address"
-          onChangeText={setDriverAddress}
-          value={driverAddress}
+          onChangeText={setCustomerAddress}
+          value={customerAddress}
           autoCapitalize="none"
         />
+        <View>
+          <Text style={styles.text}>Data de Nascimento</Text>
 
+          <DatePicker
+            format="MM/DD/YYYY"
+            minDate="01/01/1970"
+            maxDate="01/01/2022"
+            value={Birthday}
+            style={styles.date}
+            onDateChange={setBirthday}
+          />
+        </View>
         <Button
           title="SignUp"
           color="red"
           onPress={() =>
-            registerDriver(
-              driverName,
-              driverCNH,
-              driverAddress,
-              driverEmail,
-              driverPassword
+            registerUser(
+              customerName,
+              customerAddress,
+              customerEmail,
+              customerPassword,
+              Birthday
             )
           }
         />
@@ -180,6 +185,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 240,
     height: 200,
-    marginBottom:5,
+    marginBottom: 5,
   },
 });
