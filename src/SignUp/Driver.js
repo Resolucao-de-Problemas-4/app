@@ -9,11 +9,9 @@ import {
   Image,
 } from "react-native";
 import axios from "axios";
-import DatePicker from "react-native-datepicker";
-import moment from "moment";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
-import { AUTH_ROUT_DRIVER } from "../api/authdriver";
+import { DRIVER_ROUTE } from "../api/driver";
 
 export default function DriverSignUp({ navigation }) {
   const [driverName, setDriverName] = useState("");
@@ -30,14 +28,14 @@ export default function DriverSignUp({ navigation }) {
     var re = /[0-9]{11}/;
     return re.test(CNH);
   }
-
+  
   function registerDriver(
     driverName,
     driverCNH,
     driverAddress,
     driverEmail,
     driverPassword,
-  ) {
+    ) {
     if (
       driverName == "" ||
       driverCNH == "" ||
@@ -58,7 +56,7 @@ export default function DriverSignUp({ navigation }) {
     }
 
     axios
-      .post(API_REST+""+PORT+""+AUTH_ROUT_DRIVER, {
+      .post(API_REST+""+PORT+""+DRIVER_ROUTE, {
         driverName: driverName,
         driverCNH: driverCNH,
         driverAddress: driverAddress,

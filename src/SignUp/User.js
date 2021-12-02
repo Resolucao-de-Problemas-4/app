@@ -12,7 +12,7 @@ import axios from "axios";
 import DatePicker from "react-native-datepicker";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
-import { AUTH_ROUT_USER } from "../api/authuser";
+import { USER_ROUTE } from "../api/user";
 
 export default function UserSignUp({ navigation }) {
   const date = new Date();
@@ -63,7 +63,7 @@ export default function UserSignUp({ navigation }) {
     }
 
     axios
-      .post(API_REST + "" + PORT + "" + AUTH_ROUT_USER, {
+      .post(API_REST + "" + PORT + "" + USER_ROUTE, {
         customerName: customerName,
         customerAddress: customerAddress,
         customerEmail: customerEmail,

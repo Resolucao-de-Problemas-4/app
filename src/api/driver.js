@@ -1,1 +1,1 @@
-export const DRIVER_ROUTE = 'api/drivers'
+export const DRIVER_ROUTE = '/api/drivers'

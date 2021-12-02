@@ -1,1 +1,1 @@
-export const AUTH_ROUT_DRIVER = 'api/authdriver'
+export const AUTH_ROUT_DRIVER = '/api/authdriver'

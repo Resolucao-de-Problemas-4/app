@@ -1,1 +1,1 @@
-export const USER_ROUTE = 'api/users'
+export const USER_ROUTE = '/api/users'
