@@ -18,7 +18,7 @@ export default function App() {
       <Stack.Navigator>
 
         <Stack.Screen name="Home" component={Home} options={{ title: "Bem-vindo!"}} />
-        <Stack.Screen name="USer" component={ULogin} options={{ title: "User LogIn"}} />
+        <Stack.Screen name="ULogin" component={ULogin} options={{ title: "User LogIn"}} />
         <Stack.Screen name="DLogin" component={DLogin} options={{ title: "Driver LogIn"}}/>
         <Stack.Screen name="USignUp" component={USignUp} options={{ title: "User SignUp"}}/>
         <Stack.Screen name="DSignUp" component={DSignUp} options={{ title: "Driver SignUp"}}/>

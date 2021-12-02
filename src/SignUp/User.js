@@ -63,7 +63,7 @@ export default function UserSignUp({ navigation }) {
     }
 
     axios
-      .post(API_REST + "" + PORT + "" + USER_ROUTE, {
+      .post(API_REST+""+ PORT +""+USER_ROUTE, {
         customerName: customerName,
         customerAddress: customerAddress,
         customerEmail: customerEmail,

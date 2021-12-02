@@ -19,7 +19,7 @@ export default function DriverLogIn({ navigation }) {
 
   function login(email, password) {
     axios
-      .post(API_REST + "" + PORT + "/" + AUTH_ROUT_DRIVER, {
+      .post(API_REST + "" + PORT + "" + AUTH_ROUT_DRIVER, {
         email: email,
         password: password,
       })
@@ -56,6 +56,7 @@ export default function DriverLogIn({ navigation }) {
           style={styles.fieldInput}
           placeholder="Password"
           value={password}
+          secureTextEntry
           onChangeText={setPassword}
         />
       </View>

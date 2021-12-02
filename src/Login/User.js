@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { StyleSheet, Text, View, TextInput, Alert, Button, Image } from "react-native";
-import {API_REST} from '../api/api'
-import {AUTH_ROUT_USER} from '../api/authuser'
-import {PORT} from '../api/port'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Alert,
+  Button,
+  Image,
+} from "react-native";
+import { API_REST } from "../api/api";
+import { AUTH_ROUT_USER } from "../api/authuser";
+import { PORT } from "../api/port";
 
 export default function UserLogIn({ navigation }) {
   const [email, setEmail] = useState("");
@@ -11,7 +19,7 @@ export default function UserLogIn({ navigation }) {
 
   function login(email, password) {
     axios
-      .post(API_REST+""+PORT+"/"+AUTH_ROUT_USER, {
+      .post(API_REST + "" + PORT + "" + AUTH_ROUT_USER, {
         email: email,
         password: password,
       })
@@ -33,9 +41,9 @@ export default function UserLogIn({ navigation }) {
         source={{ uri: "https://i.imgur.com/0FltieF.png" }}
       />
       <View style={styles.view}>
-      <Text style={styles.text}>Email</Text>
+        <Text style={styles.text}>Email</Text>
         <TextInput
-        autoCapitalize='none'
+          autoCapitalize="none"
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
@@ -44,10 +52,11 @@ export default function UserLogIn({ navigation }) {
 
         <Text style={styles.text}>Senha</Text>
         <TextInput
-        autoCapitalize='none'
+          autoCapitalize="none"
           style={styles.fieldInput}
           placeholder="Password"
           value={password}
+          secureTextEntry
           onChangeText={setPassword}
         />
       </View>
@@ -91,13 +100,14 @@ const styles = StyleSheet.create({
     width: "100%",
     marginBottom: 25,
   },
-  button:{
-    marginTop:100,
+  button: {
+    marginTop: 100,
     width: 250,
-    height: 75
-  },logo: {
+    height: 75,
+  },
+  logo: {
     width: 240,
     height: 200,
-    marginBottom:5,
+    marginBottom: 5,
   },
 });
