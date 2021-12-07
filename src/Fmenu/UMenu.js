@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TextInput, Button, Modal } from "react-native";
 import { Alert, BackHandler } from "react-native";
 import Map from "../Map";
+import { tokenInfo } from "../token";
 
 export default function Fmenu({ navigation }) {
   const [modalV, setModalV] = useState(false);
@@ -16,7 +17,7 @@ function logout(){
   tokenInfo.email=''
   tokenInfo.name=''
   tokenInfo.token = ''
-
+  tokenInfo.cnh = ''
   navigation.navigate("Home")
 }
   
@@ -26,7 +27,7 @@ function logout(){
       {/* <Text style={styles.title}>driverName</Text> */}
       <View style={{ flex: 0, justifyContent: "flex-start" }}>
         <View style={{margin: 80,padding: 50,flex: 0,left: 120,bottom:120}}>
-          <Button title="logout" onPress={() => logout} />
+          <Button title="logout" onPress={() => logout()} />
         </View>
       </View>
 

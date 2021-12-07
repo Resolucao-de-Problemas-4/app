@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TextInput, Button, Modal } from "react-native";
 import { Alert, BackHandler } from "react-native";
 import Map from "../Map";
+import { tokenInfo } from "../token";
 
 export default function Fmenu({ navigation }) {
   const [modalV, setModalV] = useState(false);
@@ -17,6 +18,7 @@ export default function Fmenu({ navigation }) {
     tokenInfo.email=''
     tokenInfo.name=''
     tokenInfo.token = ''
+    tokenInfo.cnh = ''
     
     navigation.navigate("Home")
   }

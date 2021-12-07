@@ -13,7 +13,7 @@ import { API_REST } from "../api/api";
 import { AUTH_ROUT_USER } from "../api/authuser";
 import { PORT } from "../api/port";
 import { tokenInfo } from "../token";
-W
+
 export default function UserLogIn({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,6 +30,7 @@ export default function UserLogIn({ navigation }) {
           tokenInfo.token = data.token
           tokenInfo.name = data.user.name
           tokenInfo.email = data.user.email
+          console.log(tokenInfo)
           navigation.navigate("UMenu");
         }
       })

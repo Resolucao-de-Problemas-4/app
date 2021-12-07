@@ -12,6 +12,7 @@ import {
 import { API_REST } from "../api/api";
 import { AUTH_ROUT_DRIVER } from "../api/authdriver";
 import { PORT } from "../api/port";
+import { tokenInfo } from "../token";
 
 export default function DriverLogIn({ navigation }) {
   const [email, setEmail] = useState("");
@@ -25,6 +26,11 @@ export default function DriverLogIn({ navigation }) {
       })
       .then(function (response) {
         if (response.status == 200) {
+          tokenInfo.name = response.data.driver.name
+          tokenInfo.email = response.data.driver.email
+          tokenInfo.token = response.data.token
+          tokenInfo.cnh = response.data.driver.CNH
+          
           navigation.navigate("DMenu");
         }
       })
