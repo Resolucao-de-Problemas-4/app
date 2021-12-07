@@ -66,7 +66,7 @@ export default function DriverSignUp({ navigation }) {
       })
       .then(function (response) {
         if (response.status === 201) {
-          navigation.navigate("DMenu");
+          navigation.navigate("DLogin");
         }
       })
       .catch(function (error) {

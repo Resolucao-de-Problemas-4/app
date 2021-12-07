@@ -31,7 +31,13 @@ export default function DriverLogIn({ navigation }) {
           tokenInfo.token = response.data.token
           tokenInfo.cnh = response.data.driver.CNH
           
-          navigation.navigate("DMenu");
+          if(response.data.driver.carSigned === false){
+            navigation.navigate("CarUP");
+          }else{
+            navigation.navigate("DMenu");
+          }
+
+          
         }
       })
       .catch(function (error) {

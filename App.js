@@ -10,7 +10,7 @@ import ULogin from './src/Login/User'
 import DLogin from './src/Login/Driver'
 import IMenu from './src/Fmenu/UMenu'
 import DMenu from './src/Fmenu/DMenu';
-
+import CarUP from './src/carMenu/'
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -18,14 +18,15 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
 
+       
         <Stack.Screen name="Home" component={Home} options={{ title: "Bem-vindo!"}} />
         <Stack.Screen name="ULogin" component={ULogin} options={{ title: "User LogIn"}} />
         <Stack.Screen name="DLogin" component={DLogin} options={{ title: "Driver LogIn"}}/>
         <Stack.Screen name="USignUp" component={USignUp} options={{ title: "User SignUp"}}/>
         <Stack.Screen name="DSignUp" component={DSignUp} options={{ title: "Driver SignUp"}}/>
         <Stack.Screen name="UMenu" component={IMenu} options={{headerShown: false}} />
-        <Stack.Screen name="DMenu" component={DMenu} options={{headerShown: false}} />
-      
+        <Stack.Screen name="DMenu" component={DMenu} options={{headerShown: false}} /> 
+        <Stack.Screen name="CarUP" component={CarUP }options={{headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   );
