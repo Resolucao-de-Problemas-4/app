@@ -13,3 +13,4 @@ web-build/
 src/api/api.js
 # macOS
 .DS_Store
+src/api/api.js
