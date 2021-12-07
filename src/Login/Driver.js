@@ -25,7 +25,7 @@ export default function DriverLogIn({ navigation }) {
       })
       .then(function (response) {
         if (response.status == 200) {
-          navigation.navigate("Fmenu");
+          navigation.navigate("DMenu");
         }
       })
       .catch(function (error) {

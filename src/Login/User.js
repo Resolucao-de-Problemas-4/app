@@ -25,7 +25,7 @@ export default function UserLogIn({ navigation }) {
       })
       .then(function (response) {
         if (response.status == 200) {
-          navigation.navigate("Fmenu");
+          navigation.navigate("UMenu");
         }
       })
       .catch(function (error) {

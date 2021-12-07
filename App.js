@@ -8,7 +8,8 @@ import USignUp from './src/SignUp/User';
 import DSignUp from './src/SignUp/Driver'
 import ULogin from './src/Login/User'
 import DLogin from './src/Login/Driver'
-import Fmenu from './src/Fmenu';
+import IMenu from './src/Fmenu/UMenu'
+import DMenu from './src/Fmenu/DMenu';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,7 +23,8 @@ export default function App() {
         <Stack.Screen name="DLogin" component={DLogin} options={{ title: "Driver LogIn"}}/>
         <Stack.Screen name="USignUp" component={USignUp} options={{ title: "User SignUp"}}/>
         <Stack.Screen name="DSignUp" component={DSignUp} options={{ title: "Driver SignUp"}}/>
-        <Stack.Screen name="Fmenu" component={Fmenu} options={{headerShown: false}} />
+        <Stack.Screen name="UMenu" component={IMenu} options={{headerShown: false}} />
+        <Stack.Screen name="DMenu" component={DMenu} options={{headerShown: false}} />
       
       </Stack.Navigator>
     </NavigationContainer>
