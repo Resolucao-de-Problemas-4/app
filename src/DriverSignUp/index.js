@@ -65,7 +65,7 @@ export default function DriverSignUp({ navigation }) {
       })
       .then(function (response) {
         if (response.status === 201) {
-          navigation.navigate("Fmenu");
+          navigation.navigate("DMenu");
         }
       })
       .catch(function (error) {

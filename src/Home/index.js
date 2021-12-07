@@ -6,29 +6,51 @@ import { Alert } from 'react-native';
 export default function Home({navigation}) {
 
     return (
-        <View style={styles.container}>
-            <View style={styles.view}>
-                <Button
-                    title="Login"
-                    color="red"
-                    onPress={() => navigation.navigate("Login")}
-                />
+      <View style={styles.container}>
+
+        <View style={{flexDirection: "row", justifyContent: "space-between", right:15, bottom:50}}>
+
+            <Text style={{marginHorizontal:11}}> USER </Text>
+
+            <View style={{width:100,marginHorizontal:5}}>
+              <Button
+                title="Login"
+                color="red"
+                onPress={() => navigation.navigate("ULogin")}
+              />
             </View>
-            <View style={styles.view}>
-                <Button
-                    title="Register"
-                    color="blue"
-                    onPress={() => navigation.navigate("SignUp")}
-                />
+
+            <View style={{width:156}}>
+              <Button
+                  title="Register"
+                  color="blue"
+                  onPress={() => navigation.navigate("USignUp")}
+              />
             </View>
-            <View style={styles.view}>
-                <Button
-                    title="Trabalhe conosco!"
-                    color="purple"
-                    onPress={() => navigation.navigate("DriverSignUp")}
-                />
-            </View>
+            
         </View>
+
+        <View style={{flexDirection: "row", justifyContent: "space-between",right:10, bottom:10}}>
+
+          <Text > DRIVER </Text>
+
+          <View style={{width:100,marginHorizontal:5}}>
+            <Button
+                title="Login"
+                color="red"
+                onPress={() => navigation.navigate("DLogin")}S
+            />
+          </View>
+
+          <Button
+            title="Trabalhe conosco!"
+            color="blue"
+            onPress={() => navigation.navigate("DSignUp")}
+          />
+
+        </View>
+
+      </View>
     );
 }
 
@@ -38,9 +60,6 @@ const styles = StyleSheet.create({
       alignItems: "center",
       flex: 1,
       backgroundColor: 'rgb(200, 200, 200)'
-    },
-    view: {
-      height: "7%",
     },
     fieldInput: {
       borderColor: "black",

@@ -70,7 +70,7 @@ export default function SignUp({ navigation }) {
       })
       .then(function (response) {
         if (response.status === 201) {
-          navigation.navigate("Fmenu");
+          navigation.navigate("UMenu");
         }
       })
       .catch(function (error) {
