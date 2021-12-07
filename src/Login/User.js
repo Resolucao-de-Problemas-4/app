@@ -30,7 +30,7 @@ export default function UserLogIn({ navigation }) {
           tokenInfo.token = data.token
           tokenInfo.name = data.user.name
           tokenInfo.email = data.user.email
-          navigation.navigate("Fmenu");
+          navigation.navigate("UMenu");
         }
       })
       .catch(function (error) {

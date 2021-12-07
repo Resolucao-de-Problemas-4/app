@@ -12,13 +12,29 @@ export default function Fmenu({ navigation }) {
       BackHandler.removeEventListener("hardwareBackPress", () => true);
   }, []);
 
+<<<<<<< Updated upstream
+=======
+
+  function logout(){
+    tokenInfo.email=''
+    tokenInfo.name=''
+    tokenInfo.token = ''
+    
+    navigation.navigate("Home")
+  }
+
+>>>>>>> Stashed changes
   return (
     <View>
       <Map />
       {/* <Text style={styles.title}>driverName</Text> */}
       <View style={{flex: 0, justifyContent: "flex-start"}}>
         <View style={{margin: 80,padding: 50,flex: 0,left: 120,bottom:120}}>
+<<<<<<< Updated upstream
           <Button title="logout" onPress={() => navigation.navigate("Home")} />
+=======
+          <Button title="logout" onPress={() => logout()} />
+>>>>>>> Stashed changes
         </View>
       </View>
 
