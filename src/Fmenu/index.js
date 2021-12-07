@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import { Alert, BackHandler } from "react-native";
 import Map from "../Map";
+import { tokenInfo } from "../token";
 
 export default function Fmenu({ navigation }) {
   useEffect(() => {
@@ -11,11 +12,19 @@ export default function Fmenu({ navigation }) {
       BackHandler.removeEventListener("hardwareBackPress", () => true);
   }, []);
 
+  function logout(){
+    tokenInfo.email=''
+    tokenInfo.name=''
+    tokenInfo.token = ''
+    console.log(tokenInfo)
+    navigation.navigate("Home")
+  }
+
   return (
     <View>
       <Map />
       <View>
-        <Button title="logout" onPress={()=>navigation.navigate('Home')}/>
+        <Button title="logout" onPress={()=>logout()}/>
       </View>
     </View>
   );
