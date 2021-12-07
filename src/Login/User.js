@@ -12,6 +12,7 @@ import {
 import { API_REST } from "../api/api";
 import { AUTH_ROUT_USER } from "../api/authuser";
 import { PORT } from "../api/port";
+import { tokenInfo } from "../token";
 
 export default function UserLogIn({ navigation }) {
   const [email, setEmail] = useState("");
@@ -24,7 +25,11 @@ export default function UserLogIn({ navigation }) {
         password: password,
       })
       .then(function (response) {
-        if (response.status == 200) {
+        if (response.status === 200) {
+          const data = response.data;
+          tokenInfo.token = data.token
+          tokenInfo.name = data.user.name
+          tokenInfo.email = data.user.email
           navigation.navigate("Fmenu");
         }
       })
