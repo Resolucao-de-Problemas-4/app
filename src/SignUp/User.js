@@ -72,7 +72,7 @@ export default function UserSignUp({ navigation }) {
       })
       .then(function (response) {
         if (response.status === 201) {
-          navigation.navigate("Fmenu");
+          navigation.navigate("UMenu");
         }
       })
       .catch(function (error) {
