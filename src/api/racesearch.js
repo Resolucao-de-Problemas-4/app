@@ -1,0 +1,1 @@
+export const RACE_SEARCH = '/api/race-search'

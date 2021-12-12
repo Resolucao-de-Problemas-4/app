@@ -1,11 +1,20 @@
+import axios, { Axios } from "axios";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button, Modal } from "react-native";
-import { Alert, BackHandler } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, Modal, Alert, BackHandler } from "react-native";
+import { RACE_SEARCH } from "../api/racesearch";
+import { API_REST } from "../api/api";
+import { PORT } from '../api/port';
 import Map from "../Map";
 import { tokenInfo } from "../token";
 
 export default function Fmenu({ navigation }) {
+  const deniedlist = [];
+
+  const [idCorrida, setidCorrida] = useState(null);
+  const [latitudeF, setlatitudeF ] = useState(null);
+  const [longitudeF, setlongitudeF] = useState(null);
+
   const [modalV, setModalV] = useState(false);
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => true);
@@ -23,6 +32,27 @@ export default function Fmenu({ navigation }) {
     navigation.navigate("Home")
   }
 
+  function search(){
+    axios
+      .post(API_REST + "" + PORT + "" + RACE_SEARCH, {
+        token:tokenInfo.token,
+        "denied":deniedlist
+      }).then(function(response){
+        if(response.status === 200){
+
+          setidCorrida(response.data.id)
+          setlatitudeF(response.data.latitudeFinal)
+          setlongitudeF(response.data.longitudeFinal)
+        }
+      })
+    setModalV(!modalV)
+  }
+
+  function decline(){
+    
+    setModalV(!modalV)
+  }
+
   return (
     <View>
       <Map />
@@ -35,18 +65,24 @@ export default function Fmenu({ navigation }) {
 
       <View style={{ justifyContent: "center" }}>
         <View style={{ margin: 80,padding:55,flex: 0,left: 120,bottom:200 }}>
-          <Button title="Search Race" onPress={() => setModalV(!modalV)} color="#EEAD2D"/>
+          <Button title="Search Race" onPress={() => search()} color="#EEAD2D"/>
         </View>
       </View>
 
       <Modal transparent={true} visible={modalV}>
         <View style={{flex: 1, justifyContent: "flex-end"}}>
+          <View style={styles.destiny}>
+            <Text>
+              Latitude: {latitudeF}
+              Longitude: {longitudeF}
+            </Text>
+          </View>
           <View style={styles.buttonsModel}>
             <Button title="Aceitar" onPress={() => setModalV(!modalV)} color="#008000"/>
-            <Button title="Recusar" onPress={() => setModalV(!modalV)} color="#8B0000"/>
+            <Button title="Recusar" onPress={() => decline()} color="#8B0000"/>
           </View>
         </View>
-      </Modal>
+      </Modal> 
       
     </View>
   );
@@ -56,6 +92,7 @@ const styles = StyleSheet.create({
   title: {
     textAlign: "center",
     marginVertical: 8,
+    textShadowColor:"black"
   },
   buttonsModel: {
     backgroundColor: "#ffffff",
@@ -73,4 +110,9 @@ const styles = StyleSheet.create({
     borderBottomColor: "#737373",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
+  destiny: {
+    backgroundColor: "#ffffff",
+    width:100
+
+  }
 });
