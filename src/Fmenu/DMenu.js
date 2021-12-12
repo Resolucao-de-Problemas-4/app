@@ -1,21 +1,22 @@
 import axios, { Axios } from "axios";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button, Modal, Alert, BackHandler } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, Modal, Alert, BackHandler, Dimensions } from "react-native";
 import { RACE_SEARCH } from "../api/racesearch";
 import { API_REST } from "../api/api";
 import { PORT } from '../api/port';
 import Map from "../Map";
 import { tokenInfo } from "../token";
 
+let deniedlist = [];
+
 export default function Fmenu({ navigation }) {
-  const deniedlist = [];
 
   const [idCorrida, setidCorrida] = useState(null);
   const [latitudeF, setlatitudeF ] = useState(null);
   const [longitudeF, setlongitudeF] = useState(null);
-
   const [modalV, setModalV] = useState(false);
+
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => true);
     return () =>
@@ -39,17 +40,21 @@ export default function Fmenu({ navigation }) {
         "denied":deniedlist
       }).then(function(response){
         if(response.status === 200){
-
           setidCorrida(response.data.id)
           setlatitudeF(response.data.latitudeFinal)
           setlongitudeF(response.data.longitudeFinal)
+          setModalV(!modalV)
+        } else if(response.status === 201){
+          Alert.alert("Nenhuma corrida no momento...");
+          deniedlist = [];
         }
       })
-    setModalV(!modalV)
+    
   }
 
   function decline(){
-    
+    deniedlist.push({corridaID:idCorrida});
+    console.log(JSON.stringify(deniedlist))
     setModalV(!modalV)
   }
 

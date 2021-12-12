@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button, Modal } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, Modal, Dimensions } from "react-native";
 import { Alert, BackHandler } from "react-native";
 import Map from "../Map";
 import { tokenInfo } from "../token";
@@ -23,7 +23,14 @@ function logout(){
   
   return (
     <View>
-      <Map />
+      <View style={styles.container}>
+        <MapView
+          style={styles.map}
+          initialRegion={origin}
+          showsUserLocation={true}
+          loadingEnabled={true}
+        />
+      </View>
       {/* <Text style={styles.title}>driverName</Text> */}
       <View style={{ flex: 0, justifyContent: "flex-start" }}>
         <View style={{margin: 80,padding: 50,flex: 0,left: 120,bottom:120}}>
@@ -31,12 +38,7 @@ function logout(){
         </View>
       </View>
 
-      <View style={{ flex:0, justifyContent: "flex-start" }}>
-        <View style={{ margin: 80,padding:50,flex: 0,right:100,bottom:370 }}>
-          <TextInput style={styles.fieldInput}/>
-        </View>
-      </View>
-
+      <View style={styles.fieldInput}></View>
     </View>
   );
 }
@@ -52,15 +54,23 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   fieldInput: {
-    color:"black",
-    backgroundColor: "#D3D3D3",
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 30,
-    textAlign: "center",
-    height: 35,
-    width: 300,
-    marginTop: 3,
-    marginBottom: 5,
+    position: "relative",
+    color: "black",
+    borderColor: "grey",
+    borderWidth: 5,
+    borderTopWidth: 5,
+    borderBottomWidth: 50,
+    borderRadius: 10,
+    width: "94%",
+    left: 10,
+    bottom: 230,
+  },
+  container: {
+    flex: 1,
+    paddingTop: 50,
+  },
+  map: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
   },
 });
