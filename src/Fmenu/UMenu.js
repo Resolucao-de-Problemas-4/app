@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import MapViewDirections from "react-native-maps-directions";
 import {
   StyleSheet,
   Text,
@@ -14,11 +15,15 @@ import { Alert, BackHandler } from "react-native";
 import MapView from "react-native-maps";
 import { tokenInfo } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+
 import * as Location from "expo-location";
 
 export default function Fmenu({ navigation }) {
+  const [distance, setDistance] = useState(null)
+  const mapEl = useRef(null)
   const [modalV, setModalV] = useState(false);
   const [origin, setOrigin] = useState(null);
+  const [destination, setDestination] = useState(null);
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => true);
@@ -59,7 +64,30 @@ export default function Fmenu({ navigation }) {
           initialRegion={origin}
           showsUserLocation={true}
           loadingEnabled={true}
-        />
+          ref={mapEl}
+        >
+          <MapViewDirections
+            lineDashPattern={[1]}
+            origin={origin}
+            destination={destination}
+            apikey={"AIzaSyD1u6IQERI6G3w8MhnvzPzh4NZSen9KO_U"}
+            strokeWidth={3}
+            strokeColor="black"
+            onReady={(result) => {
+              setDistance(result.distance)
+              mapEl.current.fitToCoordinates(
+                result.coordinates,{
+                  edgePadding:{
+                    top:50,
+                    bottom:50,
+                    left:50,
+                    right:50
+                  }
+                }
+              )
+            }}
+          />
+        </MapView>
       </View>
       {/* <Text style={styles.title}>driverName</Text> */}
       <View style={{ justifyContent: "flex-start" }}>
@@ -73,8 +101,12 @@ export default function Fmenu({ navigation }) {
           minLength={5}
           placeholder="Where do we go now?"
           onPress={(data, details = null) => {
-            // 'details' is provided when fetchDetails = true
-            console.log(data, details);
+            setDestination({
+              latitude: details.geometry.location.lat,
+              longitude: details.geometry.location.lng,
+              latitudeDelta: 0.00922,
+              longitudeDelta: 0.00621,
+            });
           }}
           query={{
             key: "AIzaSyD1u6IQERI6G3w8MhnvzPzh4NZSen9KO_U",
@@ -87,6 +119,9 @@ export default function Fmenu({ navigation }) {
             keyboardShouldPersistTaps: "handled",
           }}
         />
+      </View>
+      <View style={{top:100}}>
+        {distance && <Text>{distance}m</Text>}
       </View>
     </View>
   );
