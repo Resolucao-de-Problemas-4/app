@@ -43,27 +43,27 @@ export default function Fmenu({ navigation }) {
           setidCorrida(response.data.id)
           setlatitudeF(response.data.latitudeFinal)
           setlongitudeF(response.data.longitudeFinal)
-          setModalV(!modalV)
+          setModalV(true)
         } else if(response.status === 201){
           Alert.alert("Nenhuma corrida no momento...");
-          deniedlist = [];
+          deniedlist = []
+          setModalV(false)
         }
-      })
-    
+      }) 
   }
 
   function decline(){
     deniedlist.push({corridaID:idCorrida});
-    console.log(JSON.stringify(deniedlist))
-    setModalV(!modalV)
+    // console.log(JSON.stringify(deniedlist)) print no console da lista de corridas recusadas
+    search()
   }
 
   return (
     <View>
       <Map />
       {/* <Text style={styles.title}>driverName</Text> */}
-      <View style={{flex: 0, justifyContent: "flex-start"}}>
-        <View style={{margin: 80,padding: 50,flex: 0,left: 120,bottom:120}}>
+      <View style={{justifyContent: "flex-start"}}>
+        <View style={{margin: 80,padding: 50,left: 120,bottom:120}}>
           <Button title="logout" onPress={() => logout()} />
         </View>
       </View>
@@ -77,13 +77,13 @@ export default function Fmenu({ navigation }) {
       <Modal transparent={true} visible={modalV}>
         <View style={{flex: 1, justifyContent: "flex-end"}}>
           <View style={styles.destiny}>
-            <Text>
-              Latitude: {latitudeF}
-              Longitude: {longitudeF}
-            </Text>
+            <Text>  Destination </Text>
+            <Text>  ID: {idCorrida}</Text>
+            <Text>  </Text>
+            <Text>  {latitudeF}, {longitudeF}</Text>
           </View>
           <View style={styles.buttonsModel}>
-            <Button title="Aceitar" onPress={() => setModalV(!modalV)} color="#008000"/>
+            <Button title="Aceitar" onPress={() => setModalV(false)} color="#008000"/>
             <Button title="Recusar" onPress={() => decline()} color="#8B0000"/>
           </View>
         </View>
@@ -101,12 +101,11 @@ const styles = StyleSheet.create({
   },
   buttonsModel: {
     backgroundColor: "#ffffff",
-    margin: 70,
-    padding: 23,
-    borderRadius: 20,
-    flex: 0,
-    left: 50,
-    top: 50,
+    padding: 7,
+    borderRadius: 5,
+    left: 155,
+    top: -15,
+    width:"53%",
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -117,7 +116,10 @@ const styles = StyleSheet.create({
   },
   destiny: {
     backgroundColor: "#ffffff",
-    width:100
+    width:"53%",
+    top: -15,
+    left: 155,
+    borderRadius: 5
 
   }
 });

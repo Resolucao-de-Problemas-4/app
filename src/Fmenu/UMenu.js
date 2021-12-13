@@ -32,8 +32,8 @@ function logout(){
         />
       </View>
       {/* <Text style={styles.title}>driverName</Text> */}
-      <View style={{ flex: 0, justifyContent: "flex-start" }}>
-        <View style={{margin: 80,padding: 50,flex: 0,left: 120,bottom:120}}>
+      <View style={{ justifyContent: "flex-start" }}>
+        <View style={{margin: 80,padding: 50,left: 120,bottom:120}}>
           <Button title="logout" onPress={() => logout()} />
         </View>
       </View>
