@@ -40,6 +40,7 @@ export default function Fmenu({ navigation }) {
   }, []);
 
   function acceptRace() {
+    //se clica em confirmar corrida, ele faz isso.
     axios
       .post(API_REST + "" + PORT + "/api/race", {
         token: tokenInfo.token,
@@ -62,6 +63,7 @@ export default function Fmenu({ navigation }) {
   let count = 0;
 
   if (isReady) {
+    //se a corrida foi confirmada, ele inicia a verificação de corrida aceita.
     var verificacaoCorrida = setInterval(function () {
       console.log(count++);
       verify();
@@ -69,20 +71,22 @@ export default function Fmenu({ navigation }) {
   }
 
   function verify() {
+    //verifica se a corrida foi encontrada
     axios
       .post(API_REST + "" + PORT + "/api/race-verify", {
-        idCorrida
+        idCorrida,
       })
       .then(function (response) {
         if (response.status === 200) {
           isReady = false;
           clearInterval(verificacaoCorrida);
-          Alert.alert("ACHOU!")
+          Alert.alert("ACHOU!");
         }
       });
   }
 
   useEffect(() => {
+    //pede a localização do usuário.
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -90,6 +94,7 @@ export default function Fmenu({ navigation }) {
         return;
       }
       let location = await Location.getCurrentPositionAsync({});
+      console.log(location)
       setOrigin({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -100,6 +105,7 @@ export default function Fmenu({ navigation }) {
   }, []);
 
   function cancelarCorrida() {
+    //caso o cliente não queira mais que a corrida seja aceita, ele pode cancelar
     if (idCorrida === "") {
       Alert.alert("Nenhuma corrida registrada.");
     } else {
@@ -111,6 +117,7 @@ export default function Fmenu({ navigation }) {
           if (response.status === 201) {
             Alert.alert("Corrida Cancelada...");
             isReady = false;
+            clearInterval(verificacaoCorrida);
             idCorrida = "";
             setDestination(null);
           } else if (response.status === 400) {
@@ -122,25 +129,6 @@ export default function Fmenu({ navigation }) {
         });
     }
   }
-
-  // function verify() {
-  //   while (isReady == true && corridaEncontrada == false) {
-  //     setTimeout(() => {
-  //       console.log("teste");
-  //     }, 2000);
-  //     axios
-  //       .post(API_REST + "" + PORT + "/api/race-verify", {
-  //         idCorrida,
-  //       })
-  //       .then(function (response) {
-  //         if (response.status === 201) {
-  //           console.log(response.data);
-  //           corridaEncontrada = true;
-  //           isReady = false;
-  //         }
-  //       });
-  //   }
-  // }
 
   function logout() {
     tokenInfo.email = "";
@@ -200,6 +188,7 @@ export default function Fmenu({ navigation }) {
           minLength={5}
           placeholder="Where do we go now?"
           onPress={(data, details = null) => {
+            console.log(details.formatted_address)
             setDestination({
               latitude: details.geometry.location.lat,
               longitude: details.geometry.location.lng,
@@ -237,7 +226,10 @@ export default function Fmenu({ navigation }) {
               }}
             >
               <View>
-                <Text style={styles.corridaText}>Teste</Text>
+                <View style={{justifyContent:'center',alignItems:'center'}}>
+                  <Text style={styles.corridaText}>{distance}M</Text>
+                  <Text style={styles.corridaText}>{price}R$</Text>
+                </View>
                 <Button
                   title="Confirmar Corrida"
                   onPress={() => {
