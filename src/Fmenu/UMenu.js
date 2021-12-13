@@ -175,7 +175,6 @@ export default function Fmenu({ navigation }) {
           />
         </MapView>
       </View>
-      {/* <Text style={styles.title}>driverName</Text> */}
 
       <View style={{ top: "180%", width: "30%", left: "35%" }}>
         <Button title="cancelar" onPress={() => cancelarCorrida()} />
