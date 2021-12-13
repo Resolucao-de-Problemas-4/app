@@ -12,7 +12,7 @@ import {
 import { API_REST } from "../api/api";
 import { AUTH_ROUT_USER } from "../api/authuser";
 import { PORT } from "../api/port";
-import { tokenInfo } from "../token";
+import { tokenInfoCliente } from "../token";
 
 export default function UserLogIn({ navigation }) {
   const [email, setEmail] = useState("");
@@ -27,10 +27,10 @@ export default function UserLogIn({ navigation }) {
       .then(function (response) {
         if (response.status === 200) {
           const data = response.data;
-          tokenInfo.token = data.token
-          tokenInfo.name = data.user.name
-          tokenInfo.email = data.user.email
-          console.log(tokenInfo)
+          tokenInfoCliente.token = data.token
+          tokenInfoCliente.name = data.user.name
+          tokenInfoCliente.email = data.user.email
+          console.log(tokenInfoCliente)
           navigation.navigate("UMenu");
         }
       })

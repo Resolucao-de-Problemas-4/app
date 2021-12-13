@@ -6,7 +6,7 @@ import { RACE_SEARCH } from "../api/racesearch";
 import { API_REST } from "../api/api";
 import { PORT } from '../api/port';
 import Map from "../Map";
-import { tokenInfo } from "../token";
+import {  tokenInfoMotorista } from "../token";
 
 let deniedlist = [];
 
@@ -25,10 +25,10 @@ export default function Fmenu({ navigation }) {
 
 
   function logout(){
-    tokenInfo.email=''
-    tokenInfo.name=''
-    tokenInfo.token = ''
-    tokenInfo.cnh = ''
+    tokenInfoMotorista.email=''
+    tokenInfoMotorista.name=''
+    tokenInfoMotorista.token = ''
+    tokenInfoMotorista.cnh = ''
     
     navigation.navigate("Home")
   }
@@ -36,7 +36,7 @@ export default function Fmenu({ navigation }) {
   function search(){
     axios
       .post(API_REST + "" + PORT + "" + RACE_SEARCH, {
-        token:tokenInfo.token,
+        token:tokenInfoMotorista.token,
         "denied":deniedlist
       }).then(function(response){
         if(response.status === 200){

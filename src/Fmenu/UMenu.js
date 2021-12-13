@@ -13,7 +13,7 @@ import {
 import { Alert, BackHandler } from "react-native";
 
 import MapView from "react-native-maps";
-import { tokenInfo } from "../token";
+import { tokenInfoCliente } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 import * as Location from "expo-location";
@@ -45,7 +45,7 @@ export default function Fmenu({ navigation }) {
     //se clica em confirmar corrida, ele faz isso.
     axios
       .post(API_REST + "" + PORT + "/api/race", {
-        token: tokenInfo.token,
+        token: tokenInfoCliente.token,
         longitudeOrigem: JSON.stringify(origin.latitude),
         latitudeOrigem: JSON.stringify(origin.longitude),
         longitudeFinal: JSON.stringify(destination.longitude),
@@ -135,10 +135,10 @@ export default function Fmenu({ navigation }) {
   }
 
   function logout() {
-    tokenInfo.email = "";
-    tokenInfo.name = "";
-    tokenInfo.token = "";
-    tokenInfo.cnh = "";
+    tokenInfoCliente.email = "";
+    tokenInfoCliente.name = "";
+    tokenInfoCliente.token = "";
+    tokenInfoCliente.cnh = "";
     navigation.navigate("Home");
   }
 
@@ -177,7 +177,7 @@ export default function Fmenu({ navigation }) {
       </View>
       {/* <Text style={styles.title}>driverName</Text> */}
 
-      <View style={{ top: "210%", width: "30%", left: "35%" }}>
+      <View style={{ top: "180%", width: "30%", left: "35%" }}>
         <Button title="cancelar" onPress={() => cancelarCorrida()} />
       </View>
 
@@ -212,6 +212,41 @@ export default function Fmenu({ navigation }) {
           }}
         />
       </View>
+
+      {distance && (
+        <View style={{ width: "100%" }}>
+          <Modal transparent={true} visible={modalV}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                width: "50%",
+                alignContent: "center",
+                left: "25%",
+              }}
+            >
+              <View>
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
+                  <Text style={styles.corridaText}>Corrida Aceita 😍</Text>
+                  <Text style={styles.corridaText}></Text>
+                </View>
+                <Button
+                  title="Confirmar Corrida"
+                  onPress={() => {
+                    if (isReady === true) {
+                      Alert.alert("Já há uma corrida!");
+                      setModalV(!modalV);
+                    }
+                  }}
+                  color="#008000"
+                />
+              </View>
+            </View>
+          </Modal>
+        </View>
+      )}
 
       {distance && (
         <View style={{ width: "100%" }}>
