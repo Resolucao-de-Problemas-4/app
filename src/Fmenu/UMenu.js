@@ -19,8 +19,9 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import * as Location from "expo-location";
 
 export default function Fmenu({ navigation }) {
-  const [distance, setDistance] = useState(null)
-  const mapEl = useRef(null)
+  const [distance, setDistance] = useState(null);
+  const [price, setPrice] = useState(null);
+  const mapEl = useRef(null);
   const [modalV, setModalV] = useState(false);
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
@@ -74,17 +75,16 @@ export default function Fmenu({ navigation }) {
             strokeWidth={3}
             strokeColor="black"
             onReady={(result) => {
-              setDistance(result.distance)
-              mapEl.current.fitToCoordinates(
-                result.coordinates,{
-                  edgePadding:{
-                    top:50,
-                    bottom:50,
-                    left:50,
-                    right:50
-                  }
-                }
-              )
+              setDistance(result.distance);
+              setPrice((result.distance * 2.6).toFixed(2));
+              mapEl.current.fitToCoordinates(result.coordinates, {
+                edgePadding: {
+                  top: 50,
+                  bottom: 50,
+                  left: 50,
+                  right: 50,
+                },
+              });
             }}
           />
         </MapView>
@@ -120,9 +120,17 @@ export default function Fmenu({ navigation }) {
           }}
         />
       </View>
-      <View style={{top:100}}>
-        {distance && <Text>{distance}m</Text>}
-      </View>
+      {distance && <View>
+        
+          <Text>
+            {distance}M
+          </Text>
+        
+          <Text>
+            {price}R$
+          </Text>
+
+        </View>}
     </View>
   );
 }
