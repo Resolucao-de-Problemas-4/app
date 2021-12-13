@@ -24,6 +24,8 @@ import { PORT } from "../api/port";
 let idCorrida = "";
 let isReady = false;
 let corridaEncontrada = false;
+let destino = "";
+
 export default function Fmenu({ navigation }) {
   const [modalV, setModalV] = useState(false);
   const [distance, setDistance] = useState(null);
@@ -49,6 +51,7 @@ export default function Fmenu({ navigation }) {
         longitudeFinal: JSON.stringify(destination.longitude),
         latitudeFinal: JSON.stringify(destination.latitude),
         preco: price,
+        destinoFinal: destino,
       })
       .then(function (response) {
         if (response.status === 200) {
@@ -81,6 +84,7 @@ export default function Fmenu({ navigation }) {
           isReady = false;
           clearInterval(verificacaoCorrida);
           Alert.alert("ACHOU!");
+          corridaEncontrada = true;
         }
       });
   }
@@ -94,7 +98,7 @@ export default function Fmenu({ navigation }) {
         return;
       }
       let location = await Location.getCurrentPositionAsync({});
-      console.log(location)
+
       setOrigin({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -188,7 +192,7 @@ export default function Fmenu({ navigation }) {
           minLength={5}
           placeholder="Where do we go now?"
           onPress={(data, details = null) => {
-            console.log(details.formatted_address)
+            destino = details.formatted_address;
             setDestination({
               latitude: details.geometry.location.lat,
               longitude: details.geometry.location.lng,
@@ -226,7 +230,9 @@ export default function Fmenu({ navigation }) {
               }}
             >
               <View>
-                <View style={{justifyContent:'center',alignItems:'center'}}>
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
                   <Text style={styles.corridaText}>{distance}M</Text>
                   <Text style={styles.corridaText}>{price}R$</Text>
                 </View>
