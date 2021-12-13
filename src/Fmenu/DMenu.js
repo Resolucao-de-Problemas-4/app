@@ -1,6 +1,6 @@
 import axios, { Axios } from "axios";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -18,7 +18,7 @@ import { PORT } from "../api/port";
 import { tokenInfoMotorista } from "../token";
 import MapViewDirections from "react-native-maps-directions";
 import MapView from "react-native-maps";
-import * as Location from 'expo-location'
+import * as Location from "expo-location";
 let deniedlist = [];
 
 export default function Fmenu({ navigation }) {
@@ -28,6 +28,7 @@ export default function Fmenu({ navigation }) {
   const [modalV, setModalV] = useState(false);
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
+  const [endereco, setEndereco] = useState(null)
 
   const mapEl = useRef(null);
 
@@ -76,6 +77,7 @@ export default function Fmenu({ navigation }) {
           setidCorrida(response.data.id);
           setlatitudeF(response.data.latitudeFinal);
           setlongitudeF(response.data.longitudeFinal);
+          setEndereco(response.data.destinoFinal)
           setModalV(true);
         } else if (response.status === 201) {
           Alert.alert("Nenhuma corrida no momento...");
@@ -146,13 +148,7 @@ export default function Fmenu({ navigation }) {
       <Modal transparent={true} visible={modalV}>
         <View style={{ flex: 1, justifyContent: "flex-end" }}>
           <View style={styles.destiny}>
-            <Text> Destination </Text>
-            <Text> ID: {idCorrida}</Text>
-            <Text> </Text>
-            <Text>
-              {" "}
-              {latitudeF}, {longitudeF}
-            </Text>
+            <Text> Destino: {endereco} </Text>
           </View>
           <View style={styles.buttonsModel}>
             <Button

@@ -192,6 +192,7 @@ export default function Fmenu({ navigation }) {
           placeholder="Where do we go now?"
           onPress={(data, details = null) => {
             destino = details.formatted_address;
+            console.log(destino)
             setDestination({
               latitude: details.geometry.location.lat,
               longitude: details.geometry.location.lng,
