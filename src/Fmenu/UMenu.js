@@ -17,12 +17,19 @@ import { tokenInfo } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 import * as Location from "expo-location";
+import axios from "axios";
+import { API_REST } from "../api/api";
+import { PORT } from "../api/port";
 
+let idCorrida = "";
+let isReady = false;
+let corridaEncontrada = false;
 export default function Fmenu({ navigation }) {
+  const [modalV, setModalV] = useState(false);
   const [distance, setDistance] = useState(null);
   const [price, setPrice] = useState(null);
   const mapEl = useRef(null);
-  const [modalV, setModalV] = useState(false);
+
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
 
@@ -31,6 +38,49 @@ export default function Fmenu({ navigation }) {
     return () =>
       BackHandler.removeEventListener("hardwareBackPress", () => true);
   }, []);
+
+  function acceptRace() {
+    axios
+      .post(API_REST + "" + PORT + "/api/race", {
+        token: tokenInfo.token,
+        longitudeOrigem: JSON.stringify(origin.latitude),
+        latitudeOrigem: JSON.stringify(origin.longitude),
+        longitudeFinal: JSON.stringify(destination.longitude),
+        latitudeFinal: JSON.stringify(destination.latitude),
+        preco: price,
+      })
+      .then(function (response) {
+        if (response.status === 200) {
+          idCorrida = response.data.corridaID;
+          console.log(idCorrida);
+          isReady = true;
+          setModalV(false);
+        }
+      });
+  }
+
+  let count = 0;
+
+  if (isReady) {
+    var verificacaoCorrida = setInterval(function () {
+      console.log(count++);
+      verify();
+    }, 1000);
+  }
+
+  function verify() {
+    axios
+      .post(API_REST + "" + PORT + "/api/race-verify", {
+        idCorrida
+      })
+      .then(function (response) {
+        if (response.status === 200) {
+          isReady = false;
+          clearInterval(verificacaoCorrida);
+          Alert.alert("ACHOU!")
+        }
+      });
+  }
 
   useEffect(() => {
     (async () => {
@@ -48,6 +98,49 @@ export default function Fmenu({ navigation }) {
       });
     })();
   }, []);
+
+  function cancelarCorrida() {
+    if (idCorrida === "") {
+      Alert.alert("Nenhuma corrida registrada.");
+    } else {
+      axios
+        .post(API_REST + "" + PORT + "/api/race-cancel", {
+          idCorrida,
+        })
+        .then(function (response) {
+          if (response.status === 201) {
+            Alert.alert("Corrida Cancelada...");
+            isReady = false;
+            idCorrida = "";
+            setDestination(null);
+          } else if (response.status === 400) {
+            Alert.alert("erro");
+          }
+        })
+        .catch(function (error) {
+          console.log(error.message);
+        });
+    }
+  }
+
+  // function verify() {
+  //   while (isReady == true && corridaEncontrada == false) {
+  //     setTimeout(() => {
+  //       console.log("teste");
+  //     }, 2000);
+  //     axios
+  //       .post(API_REST + "" + PORT + "/api/race-verify", {
+  //         idCorrida,
+  //       })
+  //       .then(function (response) {
+  //         if (response.status === 201) {
+  //           console.log(response.data);
+  //           corridaEncontrada = true;
+  //           isReady = false;
+  //         }
+  //       });
+  //   }
+  // }
 
   function logout() {
     tokenInfo.email = "";
@@ -77,6 +170,7 @@ export default function Fmenu({ navigation }) {
             onReady={(result) => {
               setDistance(result.distance);
               setPrice((result.distance * 2.6).toFixed(2));
+              setModalV(!modalV);
               mapEl.current.fitToCoordinates(result.coordinates, {
                 edgePadding: {
                   top: 50,
@@ -90,6 +184,11 @@ export default function Fmenu({ navigation }) {
         </MapView>
       </View>
       {/* <Text style={styles.title}>driverName</Text> */}
+
+      <View style={{ top: "210%", width: "30%", left: "35%" }}>
+        <Button title="cancelar" onPress={() => cancelarCorrida()} />
+      </View>
+
       <View style={{ justifyContent: "flex-start" }}>
         <View style={{ margin: 120, padding: 50, right: 160, bottom: 120 }}>
           <Button title="logout" onPress={() => logout()} />
@@ -120,17 +219,47 @@ export default function Fmenu({ navigation }) {
           }}
         />
       </View>
-      {distance && <View>
-        
-          <Text>
-            {distance}M
-          </Text>
-        
-          <Text>
-            {price}R$
-          </Text>
 
-        </View>}
+      {distance && (
+        <View style={{ width: "100%" }}>
+          <Modal
+            transparent={true}
+            visible={modalV}
+            style={{ backgroundColor: "rgba(198, 198, 198, 0.57)" }}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                width: "50%",
+                alignContent: "center",
+                left: "25%",
+              }}
+            >
+              <View>
+                <Text style={styles.corridaText}>Teste</Text>
+                <Button
+                  title="Confirmar Corrida"
+                  onPress={() => {
+                    if (isReady === true) {
+                      Alert.alert("Já há uma corrida!");
+                      setModalV(!modalV);
+                    } else {
+                      acceptRace();
+                    }
+                  }}
+                  color="#008000"
+                />
+                <Button
+                  title="Ainda não..."
+                  onPress={() => setModalV(false)}
+                  color="#8B0000"
+                />
+              </View>
+            </View>
+          </Modal>
+        </View>
+      )}
     </View>
   );
 }
@@ -173,5 +302,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,
+  },
+  corridaText: {
+    color: "black",
+    fontWeight: "bold",
   },
 });
