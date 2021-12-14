@@ -48,8 +48,8 @@ export default function Fmenu({ navigation }) {
     axios
       .post(API_REST + "" + PORT + "/api/race", {
         token: tokenInfoCliente.token,
-        longitudeOrigem: JSON.stringify(origin.latitude),
-        latitudeOrigem: JSON.stringify(origin.longitude),
+        longitudeOrigem: JSON.stringify(origin.longitude),
+        latitudeOrigem: JSON.stringify(origin.latitude),
         longitudeFinal: JSON.stringify(destination.longitude),
         latitudeFinal: JSON.stringify(destination.latitude),
         preco: price,
@@ -101,6 +101,10 @@ export default function Fmenu({ navigation }) {
           corridaData.corrida.idCorrida = data.corrida.id
           corridaData.corrida.latitudeFinal = data.corrida.latitudeFinal
           corridaData.corrida.longitudeFinal = data.corrida.longitudeFinal
+          corridaData.corrida.longitudeInicial = data.corrida.longitudeOrigem
+          corridaData.corrida.latitudeInicial = data.corrida.latitudeOrigem
+
+          console.log(destination, origin)
 
           navigation.navigate("USMenu");
         }

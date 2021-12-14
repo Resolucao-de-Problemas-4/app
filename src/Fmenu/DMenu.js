@@ -1,7 +1,17 @@
 import axios, { Axios } from "axios";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState, useRef } from "react";
-import { StyleSheet, Text, View, TextInput, Button, Modal, Alert, BackHandler, Dimensions, } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Modal,
+  Alert,
+  BackHandler,
+  Dimensions,
+} from "react-native";
 import { RACE_SEARCH } from "../api/racesearch";
 import { RACE_UPDATE } from "../api/raceupdate";
 import { API_REST } from "../api/api";
@@ -10,6 +20,7 @@ import { tokenInfoMotorista } from "../token";
 import MapViewDirections from "react-native-maps-directions";
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
+import { corridaData } from "../token/corrida";
 let deniedlist = [];
 
 export default function Fmenu({ navigation }) {
@@ -17,11 +28,10 @@ export default function Fmenu({ navigation }) {
   const [latitudeF, setlatitudeF] = useState(null);
   const [longitudeF, setlongitudeF] = useState(null);
   const [updateRaceBox, setupdateRaceBox] = useState(false);
-  const [searchBox, setsearchBox] = useState(true);
   const [origin, setOrigin] = useState(null);
-  const [destination, setDestination] = useState(null);
   const [endereco, setEndereco] = useState(null);
   const [corridaAceita, setcorridaAceita] = useState(false);
+  const [destination, setDestination] = useState(null);
 
   const mapEl = useRef(null);
 
@@ -71,14 +81,16 @@ export default function Fmenu({ navigation }) {
           setlatitudeF(response.data.latitudeFinal);
           setlongitudeF(response.data.longitudeFinal);
           setEndereco(response.data.destinoFinal);
+
           setupdateRaceBox(true);
-          setsearchBox(false);
         } else if (response.status === 201) {
-          Alert.alert("Nenhuma corrida no momento... 🥲");
+          Alert.alert("Nenhuma corrida no momento... 🤯🚗");
           deniedlist = [];
           setupdateRaceBox(false);
-          setsearchBox(true);
         }
+      })
+      .catch(function (error) {
+        Alert.alert("Nenhuma corrida no momento... 🤯🚗\n" + error.message);
       });
   }
 
@@ -86,24 +98,64 @@ export default function Fmenu({ navigation }) {
     axios
       .post(API_REST + "" + PORT + "" + RACE_UPDATE, {
         token: tokenInfoMotorista.token,
-        corridaID:idCorrida
+        corridaID: idCorrida,
       })
       .then(function (response) {
         if (response.status === 200) {
           setcorridaAceita(true);
-          Alert.alert("Corrida foi aceitada! 😎🧐✌️")
-          setsearchBox(true)
+          Alert.alert("Corrida foi aceita! 😎🧐✌️");
+
+          axios
+            .post(API_REST + "" + PORT + "" + "/api/race-verify", {
+              idCorrida,
+            })
+            .then(function (response) {
+              const data = response.data;
+
+              corridaData.motorista.phoneNumber = data.motorista.phoneNumber;
+              corridaData.motorista.email = data.motorista.email;
+              corridaData.motorista.name = data.motorista.name
+              corridaData.carro.plate = data.carro.plate;
+              corridaData.carro.renavan = data.carro.renavan;
+              corridaData.carro.year = data.carro.year;
+              corridaData.carro.model = data.carro.model;
+              corridaData.carro.marca = data.carro.marca;
+              corridaData.user.email = data.user.email;
+              corridaData.user.name = data.user.name;
+              corridaData.corrida.idCorrida = data.corrida.id;
+              corridaData.corrida.latitudeFinal = data.corrida.latitudeFinal;
+              corridaData.corrida.longitudeFinal = data.corrida.longitudeFinal;
+              corridaData.corrida.longitudeInicial = data.corrida.longitudeOrigem;
+              corridaData.corrida.latitudeInicial = data.corrida.latitudeOrigem;
+            });
+
+          navigation.navigate("DSMenu");
         } else if (response.status === 400) {
           alert.Alert(response.data.message);
         }
       });
 
     setupdateRaceBox(false);
-    setsearchBox(false);
   }
 
   function decline() {
     deniedlist.push({ corridaID: idCorrida });
+
+    corridaData.motorista.phoneNumber = "";
+    corridaData.motorista.email = "";
+    corridaData.carro.plate = "";
+    corridaData.carro.renavan = "";
+    corridaData.carro.year = "";
+    corridaData.carro.model = "";
+    corridaData.carro.marca = "";
+    corridaData.user.email = "";
+    corridaData.user.name = "";
+    corridaData.corrida.idCorrida = "";
+    corridaData.corrida.latitudeFinal = "";
+    corridaData.corrida.longitudeFinal = "";
+    corridaData.corrida.longitudeInicial = "";
+    corridaData.corrida.latitudeInicial = "";
+
     // console.log(JSON.stringify(deniedlist)) print no console da lista de corridas recusadas
     search();
   }
@@ -142,18 +194,20 @@ export default function Fmenu({ navigation }) {
       </View>
       {/* <Text style={styles.title}>driverName</Text> */}
       <View style={{ justifyContent: "flex-start" }}>
-        <View style={{ left: "50%", top: "180%", width:"30%" }}>
+        <View style={{ left: "50%", top: "180%", width: "30%" }}>
           <Button title="logout" onPress={() => logout()} />
         </View>
       </View>
 
-      
       <View style={{ justifyContent: "center" }}>
-        <View style={{ left: "76%", top: "500%", width: "20%" }} >
-          <Button title="Search Race" onPress={() => search()} color="#EEAD2D" />
+        <View style={{ left: "76%", top: "500%", width: "20%" }}>
+          <Button
+            title="Search Race"
+            onPress={() => search()}
+            color="#EEAD2D"
+          />
         </View>
       </View>
-           
 
       <Modal transparent={true} visible={updateRaceBox}>
         <View style={{ flex: 1, justifyContent: "flex-end" }}>

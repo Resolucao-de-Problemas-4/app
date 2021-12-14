@@ -22,11 +22,13 @@ import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { corridaData } from "../token/corrida";
 
-export default function USMENU({ navigation }) {
+export default function DSMenu({ navigation }) {
   const mapEl = useRef(null);
   const [idCorrida, setIdCorrida] = useState(null);
-  const [origin, setOrigin] = useState(null);
+  const [driverOrigin, setDriverOrigin] = useState(null);
+  const [userOrigin, setUserOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
+
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => true);
@@ -43,64 +45,64 @@ export default function USMENU({ navigation }) {
         setErrorMsg("Permission to access location was denied");
         return;
       }
-      
+
       let location = await Location.getCurrentPositionAsync({});
 
-      setOrigin({
+      setDriverOrigin({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
         latitudeDelta: 0.00922,
         longitudeDelta: 0.00621,
       });
 
-      setDestination({
-        latitude: corridaData.corrida.latitudeFinal,
-        longitude: corridaData.corrida.longitudeFinal,
+      setUserOrigin({
+        latitude: corridaData.corrida.latitudeInicial,
+        longitude: corridaData.corrida.longitudeInicial,
         latitudeDelta: 0.00922,
         longitudeDelta: 0.00621,
       });
 
-      
+
     })();
   }, []);
 
-  function cancelarCorrida() {
-    //caso o cliente não queira mais que a corrida seja aceita, ele pode cancelar
-    if (idCorrida === "") {
-      Alert.alert("Nenhuma corrida registrada.");
-    } else {
-      axios
-        .post(API_REST + "" + PORT + "/api/race-cancel", {
-          idCorrida,
-        })
-        .then(function (response) {
-          if (response.status === 201) {
-            Alert.alert("Corrida Cancelada...");
-            navigation.navigate("UMenu");
-          } else if (response.status === 400) {
-            Alert.alert("erro");
-          }
-        })
-        .catch(function (error) {
-          console.log(error.message);
-        });
-    }
-  }
+  //   function cancelarCorrida() {
+  //     //caso o cliente não queira mais que a corrida seja aceita, ele pode cancelar
+  //     if (idCorrida === "") {
+  //       Alert.alert("Nenhuma corrida registrada.");
+  //     } else {
+  //       axios
+  //         .post(API_REST + "" + PORT + "/api/race-cancel", {
+  //           idCorrida,
+  //         })
+  //         .then(function (response) {
+  //           if (response.status === 201) {
+  //             Alert.alert("Corrida Cancelada...");
+  //             navigation.navigate("UMenu");
+  //           } else if (response.status === 400) {
+  //             Alert.alert("erro");
+  //           }
+  //         })
+  //         .catch(function (error) {
+  //           console.log(error.message);
+  //         });
+  //     }
+  //   }
 
   return (
     <View>
       <View style={styles.container}>
         <MapView
           style={styles.map}
-          initialRegion={origin}
+          initialRegion={driverOrigin}
           showsUserLocation={true}
           loadingEnabled={true}
           ref={mapEl}
         >
           <MapViewDirections
             lineDashPattern={[1]}
-            origin={origin}
-            destination={destination}
+            origin={driverOrigin}
+            destination={userOrigin}
             apikey={"AIzaSyD1u6IQERI6G3w8MhnvzPzh4NZSen9KO_U"}
             strokeWidth={3}
             strokeColor="black"
@@ -132,17 +134,15 @@ export default function USMENU({ navigation }) {
             width: "75%",
           }}
         >
-          <Text style={{fontWeight:'bold'}}>Motorista: {corridaData.motorista.name}</Text>
-          <Text style={{fontWeight:'bold'}}>Modelo do carro:{corridaData.carro.model}</Text>
-          <Text style={{fontWeight:'bold'}}>Marca do carro:{corridaData.carro.marca}</Text>
-          <Text style={{fontWeight:'bold'}}>Placa do Carro:{corridaData.carro.plate}</Text>
-          
+          <Text style={{ fontWeight: "bold" }}>
+            Passageiro: {corridaData.user.name}
+          </Text>
         </View>
       </View>
 
-      <View style={{ top: "180%", width: "30%", left: "35%" }}>
+      {/* <View style={{ top: "180%", width: "30%", left: "35%" }}>
         <Button title="cancelar" onPress={() => cancelarCorrida()} />
-      </View>
+      </View> */}
     </View>
   );
 }

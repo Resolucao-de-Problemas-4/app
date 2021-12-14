@@ -1,6 +1,8 @@
 export let corridaData = {
   corrida: {
     idCorrida: String,
+    latitudeInicial: String,
+    longitudeInicial: String,
     latitudeFinal: String,
 		longitudeFinal: String,
   },
