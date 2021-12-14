@@ -1,0 +1,1 @@
+export const RACE_UPDATE = '/api/race-update'

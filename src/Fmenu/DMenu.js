@@ -1,18 +1,9 @@
 import axios, { Axios } from "axios";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState, useRef } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Button,
-  Modal,
-  Alert,
-  BackHandler,
-  Dimensions,
-} from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, Modal, Alert, BackHandler, Dimensions, } from "react-native";
 import { RACE_SEARCH } from "../api/racesearch";
+import { RACE_UPDATE } from "../api/raceupdate";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { tokenInfoMotorista } from "../token";
@@ -25,10 +16,12 @@ export default function Fmenu({ navigation }) {
   const [idCorrida, setidCorrida] = useState(null);
   const [latitudeF, setlatitudeF] = useState(null);
   const [longitudeF, setlongitudeF] = useState(null);
-  const [modalV, setModalV] = useState(false);
+  const [updateRaceBox, setupdateRaceBox] = useState(false);
+  const [searchBox, setsearchBox] = useState(true);
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
-  const [endereco, setEndereco] = useState(null)
+  const [endereco, setEndereco] = useState(null);
+  const [corridaAceita, setcorridaAceita] = useState(false);
 
   const mapEl = useRef(null);
 
@@ -77,14 +70,36 @@ export default function Fmenu({ navigation }) {
           setidCorrida(response.data.id);
           setlatitudeF(response.data.latitudeFinal);
           setlongitudeF(response.data.longitudeFinal);
-          setEndereco(response.data.destinoFinal)
-          setModalV(true);
+          setEndereco(response.data.destinoFinal);
+          setupdateRaceBox(true);
+          setsearchBox(false);
         } else if (response.status === 201) {
-          Alert.alert("Nenhuma corrida no momento...");
+          Alert.alert("Nenhuma corrida no momento... 🥲");
           deniedlist = [];
-          setModalV(false);
+          setupdateRaceBox(false);
+          setsearchBox(true);
         }
       });
+  }
+
+  function accept() {
+    axios
+      .post(API_REST + "" + PORT + "" + RACE_UPDATE, {
+        token: tokenInfoMotorista.token,
+        corridaID:idCorrida
+      })
+      .then(function (response) {
+        if (response.status === 200) {
+          setcorridaAceita(true);
+          alert.Alert("Corrida foi aceitada! 😎🧐✌️")
+          setsearchBox(true)
+        } else if (response.status === 400) {
+          alert.Alert(response.data.message);
+        }
+      });
+
+    setupdateRaceBox(false);
+    setsearchBox(false);
   }
 
   function decline() {
@@ -113,7 +128,6 @@ export default function Fmenu({ navigation }) {
             onReady={(result) => {
               setDistance(result.distance);
               setPrice((result.distance * 2.6).toFixed(2));
-              setModalV(!modalV);
               mapEl.current.fitToCoordinates(result.coordinates, {
                 edgePadding: {
                   top: 50,
@@ -128,34 +142,26 @@ export default function Fmenu({ navigation }) {
       </View>
       {/* <Text style={styles.title}>driverName</Text> */}
       <View style={{ justifyContent: "flex-start" }}>
-        <View style={{ margin: 80, padding: 50, left: 120, bottom: 120 }}>
+        <View style={{ left: "50%", top: "180%", width:"30%" }}>
           <Button title="logout" onPress={() => logout()} />
         </View>
       </View>
 
-      <View style={{ justifyContent: "center" }}>
-        <View
-          style={{ margin: 80, padding: 55, flex: 0, left: 120, bottom: 200 }}
-        >
-          <Button
-            title="Search Race"
-            onPress={() => search()}
-            color="#EEAD2D"
-          />
+      <Modal transparent={true} visible={searchBox}>
+        <View style={{ justifyContent: "center" }}>
+          <View style={{ left: "76%", top: "500%", width: "20%" }} >
+            <Button title="Search Race" onPress={() => search()} color="#EEAD2D" />
+          </View>
         </View>
-      </View>
+      </Modal>      
 
-      <Modal transparent={true} visible={modalV}>
+      <Modal transparent={true} visible={updateRaceBox}>
         <View style={{ flex: 1, justifyContent: "flex-end" }}>
           <View style={styles.destiny}>
             <Text> Destino: {endereco} </Text>
           </View>
-          <View style={styles.buttonsModel}>
-            <Button
-              title="Aceitar"
-              onPress={() => setModalV(false)}
-              color="#008000"
-            />
+          <View style={styles.buttonsAcceptDecline}>
+            <Button title="Aceitar" onPress={() => accept()} />
             <Button title="Recusar" onPress={() => decline()} color="#8B0000" />
           </View>
         </View>
@@ -167,15 +173,14 @@ export default function Fmenu({ navigation }) {
 const styles = StyleSheet.create({
   title: {
     textAlign: "center",
-    marginVertical: 8,
     textShadowColor: "black",
   },
-  buttonsModel: {
+  buttonsAcceptDecline: {
     backgroundColor: "#ffffff",
-    padding: 7,
+    padding: "3%",
     borderRadius: 5,
-    left: 155,
-    top: -15,
+    left: "20%",
+    bottom: "4%",
     width: "53%",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -188,13 +193,12 @@ const styles = StyleSheet.create({
   destiny: {
     backgroundColor: "#ffffff",
     width: "53%",
-    top: -15,
-    left: 155,
+    bottom: "2%",
+    left: "42%",
     borderRadius: 5,
   },
   container: {
-    flex: 1,
-    paddingTop: 50,
+    paddingTop: "14%",
     position: "absolute",
   },
   map: {
