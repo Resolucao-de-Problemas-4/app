@@ -147,13 +147,13 @@ export default function Fmenu({ navigation }) {
         </View>
       </View>
 
-      <Modal transparent={true} visible={searchBox}>
-        <View style={{ justifyContent: "center" }}>
-          <View style={{ left: "76%", top: "500%", width: "20%" }} >
-            <Button title="Search Race" onPress={() => search()} color="#EEAD2D" />
-          </View>
+      
+      <View style={{ justifyContent: "center" }}>
+        <View style={{ left: "76%", top: "500%", width: "20%" }} >
+          <Button title="Search Race" onPress={() => search()} color="#EEAD2D" />
         </View>
-      </Modal>      
+      </View>
+           
 
       <Modal transparent={true} visible={updateRaceBox}>
         <View style={{ flex: 1, justifyContent: "flex-end" }}>
