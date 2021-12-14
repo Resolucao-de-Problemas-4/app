@@ -91,7 +91,7 @@ export default function Fmenu({ navigation }) {
       .then(function (response) {
         if (response.status === 200) {
           setcorridaAceita(true);
-          alert.Alert("Corrida foi aceitada! 😎🧐✌️")
+          Alert.alert("Corrida foi aceitada! 😎🧐✌️")
           setsearchBox(true)
         } else if (response.status === 400) {
           alert.Alert(response.data.message);
