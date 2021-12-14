@@ -59,6 +59,7 @@ export default function Fmenu({ navigation }) {
           console.log(idCorrida);
           isReady = true;
           setModalV(false);
+          Alert.alert("Corrida criada 😁")
         }
       });
   }
@@ -83,8 +84,7 @@ export default function Fmenu({ navigation }) {
         if (response.status === 200) {
           isReady = false;
           clearInterval(verificacaoCorrida);
-          Alert.alert("ACHOU!");
-          corridaEncontrada = true;
+          Alert.alert("Um motorista aceitou a sua corrida! 🚗")
         }
       });
   }
@@ -139,6 +139,7 @@ export default function Fmenu({ navigation }) {
     tokenInfoCliente.name = "";
     tokenInfoCliente.token = "";
     tokenInfoCliente.cnh = "";
+    clearInterval(verificacaoCorrida);
     navigation.navigate("Home");
   }
 
@@ -213,40 +214,7 @@ export default function Fmenu({ navigation }) {
         />
       </View>
 
-      {distance && (
-        <View style={{ width: "100%" }}>
-          <Modal transparent={true} visible={modalV}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                width: "50%",
-                alignContent: "center",
-                left: "25%",
-              }}
-            >
-              <View>
-                <View
-                  style={{ justifyContent: "center", alignItems: "center" }}
-                >
-                  <Text style={styles.corridaText}>Corrida Aceita 😍</Text>
-                  <Text style={styles.corridaText}></Text>
-                </View>
-                <Button
-                  title="Confirmar Corrida"
-                  onPress={() => {
-                    if (isReady === true) {
-                      Alert.alert("Já há uma corrida!");
-                      setModalV(!modalV);
-                    }
-                  }}
-                  color="#008000"
-                />
-              </View>
-            </View>
-          </Modal>
-        </View>
-      )}
+     
 
       {distance && (
         <View style={{ width: "100%" }}>
