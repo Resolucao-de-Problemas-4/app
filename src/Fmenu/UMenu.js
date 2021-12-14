@@ -20,11 +20,13 @@ import * as Location from "expo-location";
 import axios from "axios";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
+import { corridaData } from "../token/corrida";
 
-let idCorrida = "";
+
 let isReady = false;
 let corridaEncontrada = false;
 let destino = "";
+let idCorrida = "";
 
 export default function Fmenu({ navigation }) {
   const [modalV, setModalV] = useState(false);
@@ -59,7 +61,7 @@ export default function Fmenu({ navigation }) {
           console.log(idCorrida);
           isReady = true;
           setModalV(false);
-          Alert.alert("Corrida criada 😁")
+          Alert.alert("Corrida criada 😁");
         }
       });
   }
@@ -84,7 +86,23 @@ export default function Fmenu({ navigation }) {
         if (response.status === 200) {
           isReady = false;
           clearInterval(verificacaoCorrida);
-          Alert.alert("Um motorista aceitou a sua corrida! 🚗")
+          Alert.alert("Um motorista aceitou a sua corrida! 🚗");
+          const data = response.data;
+          corridaData.motorista.name = data.motorista.name;
+          corridaData.motorista.phoneNumber = data.motorista.phoneNumber;
+          corridaData.motorista.email = data.motorista.email;
+          corridaData.carro.plate = data.carro.plate;
+          corridaData.carro.renavan = data.carro.renavan;
+          corridaData.carro.year = data.carro.year;
+          corridaData.carro.model = data.carro.model;
+          corridaData.carro.marca = data.carro.marca;
+          corridaData.user.email = data.user.email;
+          corridaData.user.name = data.user.name;
+          corridaData.corrida.idCorrida = data.corrida.id
+          corridaData.corrida.latitudeFinal = data.corrida.latitudeFinal
+          corridaData.corrida.longitudeFinal = data.corrida.longitudeFinal
+
+          navigation.navigate("USMenu");
         }
       });
   }
@@ -193,7 +211,7 @@ export default function Fmenu({ navigation }) {
           placeholder="Where do we go now?"
           onPress={(data, details = null) => {
             destino = details.formatted_address;
-            console.log(destino)
+            console.log(destino);
             setDestination({
               latitude: details.geometry.location.lat,
               longitude: details.geometry.location.lng,
@@ -214,8 +232,6 @@ export default function Fmenu({ navigation }) {
         />
       </View>
 
-     
-
       {distance && (
         <View style={{ width: "100%" }}>
           <Modal
@@ -230,6 +246,7 @@ export default function Fmenu({ navigation }) {
                 width: "50%",
                 alignContent: "center",
                 left: "25%",
+                top: "25%",
               }}
             >
               <View>
