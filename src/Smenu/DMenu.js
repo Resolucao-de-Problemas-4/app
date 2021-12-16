@@ -27,7 +27,6 @@ export default function DSMenu({ navigation }) {
   const [idCorrida, setIdCorrida] = useState(null);
   const [driverOrigin, setDriverOrigin] = useState(null);
   const [userOrigin, setUserOrigin] = useState(null);
-  const [destination, setDestination] = useState(null);
 
 
   useEffect(() => {

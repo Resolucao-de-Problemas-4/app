@@ -14,13 +14,13 @@ import {
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { CAR_ROUTE } from "../api/car";
-import { tokenInfo } from "../token";
+import { tokenInfoMotorista } from "../token";
 
 export default function app({ navigation }) {
   function registrarCarro(plate, chassi, renavam, ano, marca, modelo) {
     axios
       .post(API_REST + "" + PORT + "" + CAR_ROUTE, {
-        token: tokenInfo.token,
+        token: tokenInfoMotorista.token,
         plate,
         chassi,
         renavam,
