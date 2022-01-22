@@ -13,6 +13,7 @@ import DMenu from "./src/Fmenu/DMenu";
 import CarUP from "./src/carMenu/";
 import SMENU from "./src/Smenu/UMenu";
 import DSMenu from './src/Smenu/DMenu'
+import FinalRoute from './src/FinalRoute'
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -67,6 +68,11 @@ export default function App() {
         <Stack.Screen
           name="DSMenu"
           component={DSMenu}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="FinalRoute"
+          component={FinalRoute}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
