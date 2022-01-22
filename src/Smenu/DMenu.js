@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState, useRef } from "react";
 import MapViewDirections from "react-native-maps-directions";
+import { Ionicons } from '@expo/vector-icons';
 import {
   StyleSheet,
   Text,
@@ -65,6 +66,10 @@ export default function DSMenu({ navigation }) {
     })();
   }, []);
 
+  function changeRoute() {
+    navigation.navigate('FinalRoute');
+  }
+
   //   function cancelarCorrida() {
   //     //caso o cliente não queira mais que a corrida seja aceita, ele pode cancelar
   //     if (idCorrida === "") {
@@ -104,8 +109,10 @@ export default function DSMenu({ navigation }) {
             destination={userOrigin}
             apikey={"AIzaSyD1u6IQERI6G3w8MhnvzPzh4NZSen9KO_U"}
             strokeWidth={3}
+
             strokeColor="black"
             onReady={(result) => {
+
               mapEl.current.fitToCoordinates(result.coordinates, {
                 edgePadding: {
                   top: 50,
@@ -117,6 +124,8 @@ export default function DSMenu({ navigation }) {
             }}
           />
         </MapView>
+
+
 
         <View
           style={{
@@ -139,9 +148,10 @@ export default function DSMenu({ navigation }) {
         </View>
       </View>
 
-      {/* <View style={{ top: "180%", width: "30%", left: "35%" }}>
-        <Button title="cancelar" onPress={() => cancelarCorrida()} />
-      </View> */}
+
+      <View style={{ position: 'absolute', flex: 1, left: '40%', top: 600, }}>
+        <Ionicons name="md-checkmark-circle" size={64} color="green" onPress={() => changeRoute()} />
+      </View>
     </View>
   );
 }
