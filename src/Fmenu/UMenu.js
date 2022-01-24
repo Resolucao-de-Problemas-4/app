@@ -289,8 +289,6 @@ export default function Fmenu({ navigation }) {
                   onPress={() => {
                     setModalV(false)
                     setDestination('')
-                    setPrice('')
-                    setDistance('')
                   }}
                   color="#8B0000"
                 />
