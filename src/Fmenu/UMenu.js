@@ -143,12 +143,12 @@ export default function Fmenu({ navigation }) {
         })
         .then(function (response) {
           if (response.status === 201) {
+            setDestination('')
             Alert.alert("Corrida Cancelada...");
             isReady = false;
             clearInterval(verificacaoCorrida);
             idCorrida = "";
             opacity = 0;
-            setDestination(null);
           } else if (response.status === 400) {
             Alert.alert("erro");
           }
