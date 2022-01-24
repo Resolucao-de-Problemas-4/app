@@ -12,9 +12,8 @@ import {
     Dimensions,
 } from "react-native";
 import { Alert, BackHandler } from "react-native";
-
 import MapView from "react-native-maps";
-import { tokenInfoCliente } from "../token";
+import { tokenInfoCliente, tokenInfoMotorista } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 import * as Location from "expo-location";
@@ -66,9 +65,18 @@ export default function DSMenu({ navigation }) {
         })();
     }, []);
 
-    function changeRoute() {
-        navigation.navigate('FinalRoute');
+    function finalizarCorrida (){
+        axios.post(API_REST+""+PORT+'/api/race-finish', {
+            token: tokenInfoMotorista.token,
+            corridaID: corridaData.corrida.idCorrida
+        }).then(function (response){
+            if(response.status ===200){
+                navigation.navigate('DMenu')
+            }
+        })
+        
     }
+
 
     //   function cancelarCorrida() {
     //     //caso o cliente não queira mais que a corrida seja aceita, ele pode cancelar
@@ -126,7 +134,10 @@ export default function DSMenu({ navigation }) {
                 </MapView>
 
 
+                <View style={{ position: 'absolute', flex: 1, left: '40%', top: 600, }}>
+                    <Ionicons name="md-checkmark-circle" size={64} color="green" onPress={() => finalizarCorrida()} />
 
+                </View>
 
             </View>
 

@@ -28,6 +28,7 @@ let corridaEncontrada = false;
 let destino = "";
 let idCorrida = "";
 
+
 export default function Fmenu({ navigation }) {
   const [modalV, setModalV] = useState(false);
   const [distance, setDistance] = useState(null);
@@ -107,7 +108,8 @@ export default function Fmenu({ navigation }) {
           console.log(destination, origin)
 
           navigation.navigate("USMenu");
-        }
+        }else if (response.status === 201){}
+      }).catch(function (error) {
       });
   }
 
@@ -145,6 +147,7 @@ export default function Fmenu({ navigation }) {
             isReady = false;
             clearInterval(verificacaoCorrida);
             idCorrida = "";
+            opacity = 0;
             setDestination(null);
           } else if (response.status === 400) {
             Alert.alert("erro");
@@ -209,19 +212,28 @@ export default function Fmenu({ navigation }) {
         </View>
       </View>
 
-      <View style={{ flex: 1, bottom: 250 }}>
+      <View style={{ flex: 1, bottom: 200, position: 'absolute', width: '75%', left: 50 }}>
         <GooglePlacesAutocomplete
           minLength={5}
-          placeholder="Where do we go now?"
+          placeholder="Para onde vamos?"
+
           onPress={(data, details = null) => {
+
             destino = details.formatted_address;
-            console.log(destino);
+            // const detailsZ = details.address_components;
+            // detailsZ.forEach(element => {
+            //   if (element.types[0] === 'administrative_area_level_1') {
+            //     console.log(element.short_name)
+            //   }
+            // });
             setDestination({
               latitude: details.geometry.location.lat,
               longitude: details.geometry.location.lng,
               latitudeDelta: 0.00922,
               longitudeDelta: 0.00621,
             });
+
+
           }}
           query={{
             key: "AIzaSyD1u6IQERI6G3w8MhnvzPzh4NZSen9KO_U",
@@ -274,7 +286,12 @@ export default function Fmenu({ navigation }) {
                 />
                 <Button
                   title="Ainda não..."
-                  onPress={() => setModalV(false)}
+                  onPress={() => {
+                    setModalV(false)
+                    setDestination('')
+                    setPrice('')
+                    setDistance('')
+                  }}
                   color="#8B0000"
                 />
               </View>
