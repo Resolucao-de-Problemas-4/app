@@ -33,11 +33,10 @@ export default function DriverLogIn({ navigation }) {
           
           if(response.data.driver.carSigned === false){
             navigation.navigate("CarUP");
+
           }else{
             navigation.navigate("DMenu");
           }
-
-          
         }
       })
       .catch(function (error) {

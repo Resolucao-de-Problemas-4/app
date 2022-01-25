@@ -13,6 +13,7 @@ import { API_REST } from "../api/api";
 import { AUTH_ROUT_USER } from "../api/authuser";
 import { PORT } from "../api/port";
 import { tokenInfoCliente } from "../token";
+import { corridaData } from "../token/corrida";
 
 export default function UserLogIn({ navigation }) {
   const [email, setEmail] = useState("");
@@ -31,7 +32,34 @@ export default function UserLogIn({ navigation }) {
           tokenInfoCliente.name = data.user.name
           tokenInfoCliente.email = data.user.email
           console.log(tokenInfoCliente)
-          navigation.navigate("UMenu");
+          if(data.corrida !== null){
+            if(data.corrida.corridaAceita === true){
+              corridaData.motorista.name = data.motorista.name;
+              corridaData.motorista.phoneNumber = data.motorista.phoneNumber;
+              corridaData.motorista.email = data.motorista.email;
+  
+              corridaData.carro.plate = data.carro.plate;
+              corridaData.carro.renavan = data.carro.renavan;
+              corridaData.carro.year = data.carro.year;
+              corridaData.carro.model = data.carro.model;
+              corridaData.carro.marca = data.carro.marca;
+  
+              corridaData.user.email = data.user.email;
+              corridaData.user.name = data.user.name;
+  
+              corridaData.corrida.idCorrida = data.corrida.id
+              corridaData.corrida.latitudeFinal = data.corrida.latitudeFinal
+              corridaData.corrida.longitudeFinal = data.corrida.longitudeFinal
+              corridaData.corrida.longitudeInicial = data.corrida.longitudeOrigem
+              corridaData.corrida.latitudeInicial = data.corrida.latitudeOrigem
+              
+              navigation.navigate("USMenu");
+            } else{
+              navigation.navigate("UMenu");
+            }
+          }else{
+            navigation.navigate("UMenu");
+          }
         }
       })
       .catch(function (error) {
