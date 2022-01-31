@@ -1,9 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import { Alert } from 'react-native';
-
+import {NavigationActions, StackActions} from '@react-navigation/native';
 export default function Home({navigation}) {
+
+  // useEffect(()=>{
+  //   const resetAction = StackActions.reset({
+  //     index: 0,
+  //     actions: [NavigationActions.navigate({routeName: 'Home'})],
+  //     key: null,
+  //   });
+  //   this.props.navigation.dispatch(resetAction);
+  // })
 
     return (
       <View style={styles.container}>

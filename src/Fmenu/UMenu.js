@@ -15,6 +15,7 @@ import { Alert, BackHandler } from "react-native";
 import MapView from "react-native-maps";
 import { tokenInfoCliente } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { StackActions, NavigationActions } from '@react-navigation/native';
 
 import * as Location from "expo-location";
 import axios from "axios";
@@ -24,7 +25,6 @@ import { corridaData } from "../token/corrida";
 
 
 let isReady = false;
-let corridaEncontrada = false;
 let destino = "";
 let idCorrida = "";
 
@@ -34,12 +34,15 @@ export default function Fmenu({ navigation }) {
   const [distance, setDistance] = useState(null);
   const [price, setPrice] = useState(null);
   const mapEl = useRef(null);
-
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
+  let time;
+  let count = 0;
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => true);
+    time = null;
+    setDestination(null)
     return () =>
       BackHandler.removeEventListener("hardwareBackPress", () => true);
   }, []);
@@ -61,21 +64,26 @@ export default function Fmenu({ navigation }) {
           idCorrida = response.data.corridaID;
           console.log(idCorrida);
           isReady = true;
+          intervalTIME()
           setModalV(false);
           Alert.alert("Corrida criada 😁");
         }
       });
   }
 
-  let count = 0;
-
-  if (isReady) {
-    //se a corrida foi confirmada, ele inicia a verificação de corrida aceita.
-    var verificacaoCorrida = setInterval(function () {
-      console.log(count++);
-      verify();
-    }, 1000);
+  function intervalTIME(){
+    if(time === null || time === undefined ){
+      time = setInterval(function (){
+        if(isReady === false){
+          clearInterval(time)
+        }
+        console.log(count++)
+        verify()
+      },1000)
+    }
   }
+
+  
 
   function verify() {
     //verifica se a corrida foi encontrada
@@ -86,7 +94,6 @@ export default function Fmenu({ navigation }) {
       .then(function (response) {
         if (response.status === 200) {
           isReady = false;
-          clearInterval(verificacaoCorrida);
           Alert.alert("Um motorista aceitou a sua corrida! 🚗");
           const data = response.data;
           corridaData.motorista.name = data.motorista.name;
@@ -108,7 +115,7 @@ export default function Fmenu({ navigation }) {
           console.log(destination, origin)
 
           navigation.navigate("USMenu");
-        }else if (response.status === 201){}
+        } else if (response.status === 201) { }
       }).catch(function (error) {
       });
   }
@@ -146,9 +153,7 @@ export default function Fmenu({ navigation }) {
             setDestination('')
             Alert.alert("Corrida Cancelada...");
             isReady = false;
-            clearInterval(verificacaoCorrida);
             idCorrida = "";
-            opacity = 0;
           } else if (response.status === 400) {
             Alert.alert("erro");
           }
@@ -164,7 +169,8 @@ export default function Fmenu({ navigation }) {
     tokenInfoCliente.name = "";
     tokenInfoCliente.token = "";
     tokenInfoCliente.cnh = "";
-    clearInterval(verificacaoCorrida);
+    isReady = false;
+
     navigation.navigate("Home");
   }
 

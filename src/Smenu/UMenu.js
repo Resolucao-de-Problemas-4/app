@@ -21,41 +21,46 @@ import axios from "axios";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { corridaData } from "../token/corrida";
-let isReady = true;
 
+isReady = true;
 export default function USMENU({ navigation }) {
   const mapEl = useRef(null);
   const [idCorrida, setIdCorrida] = useState(null);
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
+  var time = null
+      
 
-
-
-    if (isReady) {
-      //se a corrida foi confirmada, ele inicia a verificação de corrida aceita.
-      var verificacaoCorrida = setInterval(function () {
-        verify();
-      }, 2000);
+  function intervalTIME(){
+    if(time === null || time === undefined ){
+      time = setInterval(function (){
+        if(isReady === false){
+          clearInterval(time)
+        }
+        verify()
+      },1000)
     }
-  
+  }
 
   function verify() {
     axios
       .post(API_REST + "" + PORT + "/api/race-verify-finish", {
-        idCorrida,
-      }).then(function (response){
-        if(response.status === 200){
+        idCorrida:corridaData.corrida.idCorrida,
+      }).then(function (response) {
+        console.log(response)
+        if (response.status === 200) {
           isReady = false;
           navigation.navigate("UMenu")
         }
-      }).catch(function (error){});
-      
+      }).catch(function (error) {});
+
   }
 
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => true);
     setIdCorrida(corridaData.corrida.idCorrida);
+    intervalTIME()
     return () =>
       BackHandler.removeEventListener("hardwareBackPress", () => true);
   }, []);
@@ -100,6 +105,7 @@ export default function USMENU({ navigation }) {
         })
         .then(function (response) {
           if (response.status === 201) {
+            isReady = false
             Alert.alert("Corrida Cancelada...");
             navigation.navigate("UMenu");
           } else if (response.status === 400) {
