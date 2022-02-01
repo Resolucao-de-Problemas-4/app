@@ -34,6 +34,7 @@ export default function USMENU({ navigation }) {
   function intervalTIME(){
     if(time === null || time === undefined ){
       time = setInterval(function (){
+        
         if(isReady === false){
           clearInterval(time)
         }
@@ -47,9 +48,9 @@ export default function USMENU({ navigation }) {
       .post(API_REST + "" + PORT + "/api/race-verify-finish", {
         idCorrida:corridaData.corrida.idCorrida,
       }).then(function (response) {
-        console.log(response)
         if (response.status === 200) {
           isReady = false;
+          Alert.alert('Avalie o motorista ')
           navigation.navigate("UMenu")
         }
       }).catch(function (error) {});

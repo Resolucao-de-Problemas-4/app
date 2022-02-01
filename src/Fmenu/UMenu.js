@@ -9,20 +9,21 @@ import {
   Button,
   Modal,
   Dimensions,
+  TouchableOpacity
 } from "react-native";
 import { Alert, BackHandler } from "react-native";
 
 import MapView from "react-native-maps";
 import { tokenInfoCliente } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { StackActions, NavigationActions } from '@react-navigation/native';
+import { StackActions, NavigationActions, NavigationContainer } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 import * as Location from "expo-location";
 import axios from "axios";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { corridaData } from "../token/corrida";
-
 
 let isReady = false;
 let destino = "";
@@ -37,6 +38,7 @@ export default function Fmenu({ navigation }) {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   let time;
+  const [visible, setVisible] = useState(false)
   let count = 0;
 
   useEffect(() => {
@@ -71,19 +73,19 @@ export default function Fmenu({ navigation }) {
       });
   }
 
-  function intervalTIME(){
-    if(time === null || time === undefined ){
-      time = setInterval(function (){
-        if(isReady === false){
+  function intervalTIME() {
+    if (time === null || time === undefined) {
+      time = setInterval(function () {
+        if (isReady === false) {
           clearInterval(time)
         }
         console.log(count++)
         verify()
-      },1000)
+      }, 1000)
     }
   }
 
-  
+
 
   function verify() {
     //verifica se a corrida foi encontrada
@@ -164,6 +166,14 @@ export default function Fmenu({ navigation }) {
     }
   }
 
+  const changeVisibility = () => {
+    if (visible) {
+      setVisible(false)
+    } else {
+      setVisible(true)
+    }
+  };
+
   function logout() {
     tokenInfoCliente.email = "";
     tokenInfoCliente.name = "";
@@ -218,7 +228,49 @@ export default function Fmenu({ navigation }) {
         </View>
       </View>
 
-      <View style={{ flex: 1, bottom: 200, position: 'absolute', width: '75%', left: 50 }}>
+      <View style={{
+        flex: 1, justifyContent: 'center', alignItems: 'center'
+      }}>
+        <ModalPopUp visible={visible}>
+          <View style={{ alignItems: 'center' }}>
+            <View style={styles.header}>
+              <View style={{width:'100%',justifyContent:'center',alignItems:'center', flexDirection:'row'}}>
+                <Text>INFORMAÇÕES DO USUÁRIO</Text>
+              </View>
+                <Ionicons name="close-circle-outline" size={24} color="red" style={{alignItems:'flex-end'}} onPress={() => changeVisibility()} />
+            </View>
+
+            <TouchableOpacity onPress={()=>console.log('Pagamento')}>
+            <View style={styles.viewModal}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name="person-circle-outline" size={24} color="black" onPress={() => changeVisibility()} />
+                <Text style={styles.textModal}>
+                  FORMA DE PAGAMENTO
+                </Text>
+              </View>
+            </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={()=>console.log('Corrida')}>
+            <View style={styles.viewModal}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name="person-circle-outline" size={24} color="black" />
+                <Text style={styles.textModal}>
+                  MINHA CORRIDAS
+                </Text>
+              </View>
+            </View>
+            </TouchableOpacity>
+
+          </View>
+        </ModalPopUp>
+      </View >
+
+      <View style={{ flex: 1, bottom: '5%', left: '88%', position: 'absolute', width: '100%', height: '100%', justifyContent: 'center' }}>
+        <Ionicons name="person-circle-outline" size={48} color="black" onPress={() => changeVisibility()} />
+      </View>
+
+      <View style={{ flex: 1, bottom: 200, position: 'absolute', width: '75%', left: 30 }}>
         <GooglePlacesAutocomplete
           minLength={5}
           placeholder="Para onde vamos?"
@@ -254,57 +306,71 @@ export default function Fmenu({ navigation }) {
         />
       </View>
 
-      {distance && (
-        <View style={{ width: "100%" }}>
-          <Modal
-            transparent={true}
-            visible={modalV}
-            style={{ backgroundColor: "rgba(198, 198, 198, 0.57)" }}
-          >
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                width: "50%",
-                alignContent: "center",
-                left: "25%",
-                top: "25%",
-              }}
+      {
+        distance && (
+          <View style={{ width: "100%" }}>
+            <Modal
+              transparent={true}
+              visible={modalV}
+              style={{ backgroundColor: "rgba(198, 198, 198, 0.57)" }}
             >
-              <View>
-                <View
-                  style={{ justifyContent: "center", alignItems: "center" }}
-                >
-                  <Text style={styles.corridaText}>{distance}M</Text>
-                  <Text style={styles.corridaText}>{price}R$</Text>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  width: "50%",
+                  alignContent: "center",
+                  left: "25%",
+                  top: "25%",
+                }}
+              >
+                <View>
+                  <View
+                    style={{ justifyContent: "center", alignItems: "center" }}
+                  >
+                    <Text style={styles.corridaText}>{distance}M</Text>
+                    <Text style={styles.corridaText}>{price}R$</Text>
+                  </View>
+                  <Button
+                    title="Confirmar Corrida"
+                    onPress={() => {
+                      if (isReady === true) {
+                        Alert.alert("Já há uma corrida!");
+                        setModalV(!modalV);
+                      } else {
+                        acceptRace();
+                      }
+                    }}
+                    color="#008000"
+                  />
+                  <Button
+                    title="Ainda não..."
+                    onPress={() => {
+                      setModalV(false)
+                      setDestination('')
+                    }}
+                    color="#8B0000"
+                  />
                 </View>
-                <Button
-                  title="Confirmar Corrida"
-                  onPress={() => {
-                    if (isReady === true) {
-                      Alert.alert("Já há uma corrida!");
-                      setModalV(!modalV);
-                    } else {
-                      acceptRace();
-                    }
-                  }}
-                  color="#008000"
-                />
-                <Button
-                  title="Ainda não..."
-                  onPress={() => {
-                    setModalV(false)
-                    setDestination('')
-                  }}
-                  color="#8B0000"
-                />
               </View>
-            </View>
-          </Modal>
-        </View>
-      )}
-    </View>
+            </Modal>
+          </View>
+        )
+      }
+    </View >
   );
+}
+
+const ModalPopUp = ({ visible, children }) => {
+  return (
+    <Modal transparent visible={visible}>
+      <View style={styles.modalBackGround}>
+        <View style={[styles.modalContainer]}>
+          {children}
+        </View>
+      </View>
+    </Modal>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -350,4 +416,29 @@ const styles = StyleSheet.create({
     color: "black",
     fontWeight: "bold",
   },
+  modalBackGround: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  modalContainer: {
+    width: '80%',
+    backgroundColor: 'white',
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    borderRadius: 20,
+    elevation: 20
+  },
+  header: {
+    width: '100%',
+    height: 40,
+    alignItems: 'flex-end',
+    justifyContent: 'center'
+  },
+  textModal: {
+    marginLeft: 10, fontSize: 15,marginRight:15
+
+  },
+  viewModal: { borderWidth: 1, borderRadius: 10, width: '100%', height: 45, justifyContent: 'center', marginTop: 20 }
 });
