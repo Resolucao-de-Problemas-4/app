@@ -14,6 +14,7 @@ import CarUP from "./src/carMenu/";
 import SMENU from "./src/Smenu/UMenu";
 import DSMenu from './src/Smenu/DMenu'
 import FinalRoute from './src/FinalRoute'
+import CardScreen from "./src/card";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -74,6 +75,12 @@ export default function App() {
           name="FinalRoute"
           component={FinalRoute}
           options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="CardScreen"
+          component={CardScreen}
+          options={{title:'Cartões'}}
         />
       </Stack.Navigator>
     </NavigationContainer>

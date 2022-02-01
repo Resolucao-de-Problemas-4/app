@@ -234,32 +234,32 @@ export default function Fmenu({ navigation }) {
         <ModalPopUp visible={visible}>
           <View style={{ alignItems: 'center' }}>
             <View style={styles.header}>
-              <View style={{width:'100%',justifyContent:'center',alignItems:'center', flexDirection:'row'}}>
+              <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
                 <Text>INFORMAÇÕES DO USUÁRIO</Text>
               </View>
-                <Ionicons name="close-circle-outline" size={24} color="red" style={{alignItems:'flex-end'}} onPress={() => changeVisibility()} />
+              <Ionicons name="close-circle-outline" size={24} color="red" style={{ alignItems: 'flex-end' }} onPress={() => changeVisibility()} />
             </View>
 
-            <TouchableOpacity onPress={()=>console.log('Pagamento')}>
-            <View style={styles.viewModal}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name="person-circle-outline" size={24} color="black" onPress={() => changeVisibility()} />
-                <Text style={styles.textModal}>
-                  FORMA DE PAGAMENTO
-                </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('CardScreen')}>
+              <View style={styles.viewModal}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="wallet" size={24} style={{ marginLeft: 5 }} color="black" onPress={() => changeVisibility()} />
+                  <Text style={styles.textModal}>
+                    FORMA DE PAGAMENTO
+                  </Text>
+                </View>
               </View>
-            </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>console.log('Corrida')}>
-            <View style={styles.viewModal}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name="person-circle-outline" size={24} color="black" />
-                <Text style={styles.textModal}>
-                  MINHA CORRIDAS
-                </Text>
+            <TouchableOpacity onPress={() => console.log('Corrida')}>
+              <View style={styles.viewModal}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="car" size={24} style={{ marginLeft: 5 }} color="black" />
+                  <Text style={styles.textModal}>
+                    MINHA CORRIDAS
+                  </Text>
+                </View>
               </View>
-            </View>
             </TouchableOpacity>
 
           </View>
@@ -437,7 +437,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   textModal: {
-    marginLeft: 10, fontSize: 15,marginRight:15
+    marginLeft: 10, fontSize: 15, marginRight: 15
 
   },
   viewModal: { borderWidth: 1, borderRadius: 10, width: '100%', height: 45, justifyContent: 'center', marginTop: 20 }
