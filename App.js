@@ -14,12 +14,18 @@ import CarUP from "./src/carMenu/";
 import SMENU from "./src/Smenu/UMenu";
 import DSMenu from './src/Smenu/DMenu'
 import FinalRoute from './src/FinalRoute'
+import RacesList from './src/Races/User/List'
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen
+          name="RacesList"
+          component={RacesList}
+          options={{ headerShown: false}}
+        />
         <Stack.Screen
           name="Home"
           component={Home}
