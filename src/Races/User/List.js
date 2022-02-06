@@ -25,21 +25,23 @@ import { PORT } from "../../api/port";
 import { corridaData } from "../../token/corrida";
 
 
+
 export default function List() {
-  const [racesList, setRacesList] = useState('');
+  const [racesList, setRacesList] = useState([])
+  let iniciada = [];
   useEffect(() => {
     axios.post(API_REST + '' + PORT + '/api/race-u-list', {
-      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNkNGQ3ODQ4LWY2ZDAtNDFhYy04MDc2LWI0ZjNkMGVmOWRmMyIsImlhdCI6MTY0NDA5MzQ2OSwiZXhwIjoxNjQ0MTc5ODY5fQ.G3d6qwQVi3PLGCn_SDNK_ZimDwiypKN7vfo24ffvgWs'
+      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQyZTIxNDcyLTMwZTgtNDQyMi04ZjIzLTZkZTY2NmNiNWIxOSIsImlhdCI6MTY0NDE5MDE1OCwiZXhwIjoxNjQ0Mjc2NTU4fQ.LbuI2CMrTCxQeF5CsFWTB6KqM-o4G6YtG359aZisYRs'
       // token:tokenInfoCliente.token
     }).then(function (response) {
-      setRacesList(response.data)
-
+      console.log(response.data)
+      data = response.data.races
+      setRacesList(data)    
     }).catch(function (error) {
       setRacesList(null)
     })
-    console.log(racesList)
-
   }, []);
+
 
   return (
     <View>
@@ -54,7 +56,7 @@ export default function List() {
                 <View style={{ flexDirection: 'row', width: '40%', borderWidth: 3, borderRadius: 20, marginTop: 10, height: 100 }}>
                   <View style={{ width: '100%', alignSelf: 'center' }}>
                     <Text style={{fontSize: 32, textAlign: 'center'}}>
-                      {item.valorViagem}
+                      {item.destinoFinal}
                     </Text>
                   </View>
                 </View>
