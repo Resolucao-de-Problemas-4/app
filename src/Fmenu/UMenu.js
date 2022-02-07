@@ -251,10 +251,10 @@ export default function Fmenu({ navigation }) {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => console.log('Corrida')}>
+            <TouchableOpacity onPress={() => navigation.navigate('RacesList')}>
               <View style={styles.viewModal}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Ionicons name="car" size={24} style={{ marginLeft: 5 }} color="black" />
+                  <Ionicons name="person-circle-outline" size={24} color="black" />
                   <Text style={styles.textModal}>
                     MINHA CORRIDAS
                   </Text>
