@@ -15,6 +15,7 @@ import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { CAR_ROUTE } from "../api/car";
 import { tokenInfoMotorista } from "../token";
+import { TextInputMask } from "react-native-masked-text";
 
 export default function app({ navigation }) {
   function registrarCarro(plate, chassi, renavam, ano, marca, modelo) {
@@ -27,13 +28,13 @@ export default function app({ navigation }) {
         year: ano,
         marca,
         model: modelo
-    })
+      })
       .then(function (response) {
         if (response.status === 201) {
           navigation.navigate("DMenu");
         }
-        if(response.status === 400){
-            Alert.alert("Carro já cadastrado...")
+        if (response.status === 400) {
+          Alert.alert("Carro já cadastrado...")
         }
       })
       .catch(function (error) {
@@ -56,20 +57,25 @@ export default function app({ navigation }) {
       />
       <View style={styles.view}>
         <Text style={styles.text}>Placa do Carro</Text>
-        <TextInput
+        <TextInputMask
+          type='custom'
+          options={{ mask: 'AAA-9999' }}
           style={styles.fieldInput}
           placeholder="Placa"
+          autoCapitalize="characters"
           maxLength={8}
           value={plate}
           onChangeText={setPlate}
         />
 
         <Text style={styles.text}>chassi do carro</Text>
-        <TextInput
+        <TextInputMask
           style={styles.fieldInput}
-          maxLength={14}
+          type='custom'
+          autoCapitalize='characters'
+          options={{ mask: '9AAAA99AA99999999 ' }}
+          maxLength={17}
           placeholder="Chassi"
-          autoCapitalize="words"
           value={chassi}
           onChangeText={setChassi}
         />
@@ -77,7 +83,7 @@ export default function app({ navigation }) {
         <Text style={styles.text}>Renavam</Text>
         <TextInput
           style={styles.fieldInput}
-          maxLength={14}
+          maxLength={11}
           placeholder="Renavam"
           keyboardType="numeric"
           value={renavam}
@@ -100,7 +106,7 @@ export default function app({ navigation }) {
           style={styles.fieldInput}
           placeholder="Marca"
           maxLength={32}
-          autoCapitalize="none"
+          autoCapitalize="words"
           value={marca}
           onChangeText={setMarca}
         />
@@ -117,7 +123,7 @@ export default function app({ navigation }) {
         <Button
           title="SignUp"
           color="red"
-          onPress={() => registrarCarro(plate,chassi,renavam,ano,marca,modelo)}
+          onPress={() => registrarCarro(plate, chassi, renavam, ano, marca, modelo)}
         />
       </View>
     </View>
