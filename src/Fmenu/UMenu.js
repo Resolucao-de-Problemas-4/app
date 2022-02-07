@@ -218,7 +218,7 @@ export default function Fmenu({ navigation }) {
         </MapView>
       </View>
 
-      <View style={{ top: "180%", width: "30%", left: "35%" }}>
+      <View style={{ top: "180%", width: "30%", left: "35%",position:'absolute' }}>
         <Button title="cancelar" onPress={() => cancelarCorrida()} />
       </View>
 
