@@ -25,7 +25,6 @@ export default function UserSignUp({ navigation }) {
   const [visible, setVisible] = useState(false)
   const [birthday, setBirthday] = useState(date);
   const [addressInfo, setAddressInfo] = useState({})
-  const [address, setAddress] = useState(null)
   function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
@@ -52,16 +51,13 @@ export default function UserSignUp({ navigation }) {
       birthday == ""
     ) {
       Alert.alert("Preencha todos os campos!");
-      return "Preencha os Campos";
     }
     if (!validateEmail(customerEmail)) {
       Alert.alert("Insira um email valido");
-      return "Preencha os Campos";
     }
     const age = validateBirth(birthday);
     if (age < 18) {
       Alert.alert("Você não tem a idade mínima para se inscrever.");
-      return "Preencha os Campos";
     }
 
     axios
@@ -79,7 +75,7 @@ export default function UserSignUp({ navigation }) {
 
       })
       .catch(function (error) {
-        console.log(error);
+        console.log(error.message);
         Alert.alert("Email já cadastrado.");
       });
   }
@@ -106,13 +102,12 @@ export default function UserSignUp({ navigation }) {
   }
 
   function makeAddressLine() {
-    setAddress(addressInfo.logradouro + ' - ' + addressInfo.bairro + ' - ' + addressInfo.localidade + ' / ' + addressInfo.localidade)
-    registerUser(customerName, address, customerEmail, customerPassword, birthday)
+    const endereco = addressInfo.logradouro + ' - ' + addressInfo.bairro + ' - ' + addressInfo.localidade + ' / ' + addressInfo.uf
+    registerUser(customerName, endereco, customerEmail, customerPassword, birthday)
     changeVisibility()
   }
 
   function setUpAddressLineNull() {
-    setAddress(null)
     changeVisibility()
   }
 
