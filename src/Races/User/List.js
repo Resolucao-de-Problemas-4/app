@@ -23,6 +23,7 @@ import axios from "axios";
 import { API_REST } from "../../api/api";
 import { PORT } from "../../api/port";
 import { corridaData } from "../../token/corrida";
+import style from "react-native-datepicker/style";
 
 
 
@@ -31,82 +32,70 @@ export default function List() {
   let iniciada = [];
   useEffect(() => {
     axios.post(API_REST + '' + PORT + '/api/race-u-list', {
-      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQyZTIxNDcyLTMwZTgtNDQyMi04ZjIzLTZkZTY2NmNiNWIxOSIsImlhdCI6MTY0NDE5MDE1OCwiZXhwIjoxNjQ0Mjc2NTU4fQ.LbuI2CMrTCxQeF5CsFWTB6KqM-o4G6YtG359aZisYRs'
-      // token:tokenInfoCliente.token
+      token:tokenInfoCliente.token
     }).then(function (response) {
       console.log(response.data)
       data = response.data.races
-      setRacesList(data)    
+      setRacesList(data)
     }).catch(function (error) {
       setRacesList(null)
     })
   }, []);
 
-
   return (
-    <View>
-      <View style={{ top: '10%'}}>
-        <Text style={{ fontSize: 32, textAlign: 'center' }}>Lista de Corridas</Text>
-        <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', position: 'relative', marginTop: '100%', }}>
-          <FlatList
-            data={racesList}
-            keyExtractor={racesList => racesList.id}
-            renderItem={({ item }) => {
-              return (
-                <View style={{ flexDirection: 'row', width: '40%', borderWidth: 3, borderRadius: 20, marginTop: 10, height: 100 }}>
-                  <View style={{ width: '100%', alignSelf: 'center' }}>
-                    <Text style={{fontSize: 32, textAlign: 'center'}}>
-                      {item.destinoFinal}
-                    </Text>
-                  </View>
-                </View>
-              )
-            }}
-          />
-        </View>
-      </View>
+    <View style={styles.container}>
+      <FlatList
+        data={racesList}
+        keyExtractor={racesList => racesList.id}
+        renderItem={({ item }) => {
+          return (
+            <View style={styles.itensContainer}>
+              <View style={styles.item}>
+                <Text style={styles.text}>
+                  {item.destinoFinal}
+                </Text>
+                <Text style={styles.text}>
+                  Valor: R${item.valorViagem}
+                </Text>
+              </View>
+            </View>
+          )
+        }}
+      />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  titleView: {
+    justifyContent: "flex-start",
+    alignSelf: "center"
+  },
   container: {
-    justifyContent: "center",
-    alignItems: "center",
+    marginTop: StatusBar.currentHeight || 0,
+    top: '3%',
+    height:'95%',
+    marginBottom: '10%',
   },
-  view: {
-    height: "500%",
-    left: "50%",
-    top: "50%"
+  itensContainer: {
+    flex: 1,
+    top: '35%',
+    marginLeft: '3%',
+    marginRight: '3%',
+    marginTop: '-11%',
+    marginBottom: '15%'
   },
-  fieldInput: {
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 30,
-    textAlign: "center",
-    height: 35,
-    width: 250,
-    marginTop: 3,
-    marginBottom: 5,
+  item: {
+    width: '100%',
+    height: '100%',
+    borderWidth: 3,
+    borderRadius: 15,
+    padding: 15
+  },
+  title: {
+    fontSize: 32,
   },
   text: {
-    fontFamily: "serif",
-    fontStyle: "italic",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  date: {
-    width: "100%",
-    marginBottom: 25,
-  },
-  button: {
-    marginTop: 100,
-    width: 250,
-    height: 75,
-  },
-  logo: {
-    width: 240,
-    height: 200,
-    marginBottom: 5,
+    fontSize: 15
   },
 });
