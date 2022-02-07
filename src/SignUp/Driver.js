@@ -12,6 +12,7 @@ import axios from "axios";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { DRIVER_ROUTE } from "../api/driver";
+import { TextInputMask } from "react-native-masked-text";
 
 export default function DriverSignUp({ navigation }) {
   const [driverName, setDriverName] = useState("");
@@ -28,14 +29,14 @@ export default function DriverSignUp({ navigation }) {
     var re = /[0-9]{11}/;
     return re.test(CNH);
   }
-  
+
   function registerDriver(
     driverName,
     driverCNH,
     driverAddress,
     driverEmail,
     driverPassword,
-    ) {
+  ) {
     if (
       driverName == "" ||
       driverCNH == "" ||
@@ -50,13 +51,13 @@ export default function DriverSignUp({ navigation }) {
     if (!validateEmail(driverEmail)) {
       Alert.alert("Insira um email valido");
       return "Preencha os Campos";
-    }else if (!validateCNH(driverCNH)) {
+    } else if (!validateCNH(driverCNH)) {
       Alert.alert("Insira uma CNH valida");
       return "Preencha os Campos";
     }
 
     axios
-      .post(API_REST+""+PORT+""+DRIVER_ROUTE, {
+      .post(API_REST + "" + PORT + "" + DRIVER_ROUTE, {
         driverName: driverName,
         driverCNH: driverCNH,
         driverAddress: driverAddress,
@@ -82,7 +83,7 @@ export default function DriverSignUp({ navigation }) {
         source={{ uri: "https://i.imgur.com/0FltieF.png" }}
       />
       <View style={styles.view}>
-        
+
         <Text style={styles.text}>Username</Text>
         <TextInput
           style={styles.fieldInput}
@@ -102,13 +103,17 @@ export default function DriverSignUp({ navigation }) {
         />
 
         <Text style={styles.text}>CNH</Text>
-        <TextInput
+
+        <TextInputMask
+          type="custom"
+          options={{
+            mask:'999999999999'
+          }}
           style={styles.fieldInput}
           placeholder="Type ur CNH"
-          //keyboardType="cnh"
           onChangeText={setDriverCNH}
           value={driverCNH}
-          autoCapitalize="none"
+          keyboardType='numeric'
 
         />
 
@@ -181,6 +186,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 240,
     height: 200,
-    marginBottom:5,
+    marginBottom: 5,
   },
 });
