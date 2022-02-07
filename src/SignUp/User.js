@@ -4,6 +4,7 @@ import {
   Text,
   View,
   TextInput,
+  Modal,
   Button,
   Alert,
   Image,
@@ -13,6 +14,7 @@ import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { USER_ROUTE } from "../api/user";
 import { TextInputMask } from "react-native-masked-text";
+import { Ionicons } from '@expo/vector-icons';
 
 export default function UserSignUp({ navigation }) {
   const date = new Date();
@@ -20,9 +22,10 @@ export default function UserSignUp({ navigation }) {
   const [customerAddress, setCustomerAddress] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPassword, setCustomerPassword] = useState("");
-
+  const [visible, setVisible] = useState(false)
   const [birthday, setBirthday] = useState(date);
-
+  const [addressInfo, setAddressInfo] = useState({})
+  const [address, setAddress] = useState(null)
   function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
@@ -48,7 +51,6 @@ export default function UserSignUp({ navigation }) {
       customerPassword == "" ||
       birthday == ""
     ) {
-      // birthValidation('02/08/2002')
       Alert.alert("Preencha todos os campos!");
       return "Preencha os Campos";
     }
@@ -74,11 +76,44 @@ export default function UserSignUp({ navigation }) {
         if (response.status === 201) {
           navigation.navigate("ULogin");
         }
+
       })
       .catch(function (error) {
         console.log(error);
         Alert.alert("Email já cadastrado.");
       });
+  }
+
+  function changeVisibility() {
+    if (visible) {
+      setVisible(false)
+    } else {
+      setVisible(true)
+    }
+  }
+
+  const ModalPop = ({ visible, children }) => {
+    return (
+      <Modal transparent visible={visible}>
+        <View style={styles.modalBackGround}>
+          <View style={[styles.modalContainer]}>
+            {children}
+          </View>
+        </View>
+      </Modal>
+    )
+
+  }
+
+  function makeAddressLine() {
+    setAddress(addressInfo.logradouro + ' - ' + addressInfo.bairro + ' - ' + addressInfo.localidade + ' / ' + addressInfo.localidade)
+    registerUser(customerName, address, customerEmail, customerPassword, birthday)
+    changeVisibility()
+  }
+
+  function setUpAddressLineNull() {
+    setAddress(null)
+    changeVisibility()
   }
 
   return (
@@ -88,7 +123,32 @@ export default function UserSignUp({ navigation }) {
         source={{ uri: "https://i.imgur.com/0FltieF.png" }}
       />
 
+      <View style={{
+        flex: 1, justifyContent: 'center', alignItems: 'center'
+      }}>
 
+        <ModalPop visible={visible}>
+          <View style={{ alignItems: 'center' }}>
+            <View style={styles.header}>
+              <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', top: '80%' }}>
+                <Text style={styles.textModal}>{addressInfo.bairro}</Text>
+                <Text style={styles.textModal}>{addressInfo.logradouro}</Text>
+                <Text style={styles.textModal}>{addressInfo.uf}</Text>
+                <Text style={styles.textModal}>{addressInfo.localidade}</Text>
+              </View>
+            </View>
+            <View style={{
+              alignItems: 'flex-end',
+              marginTop: 80,
+              flexDirection: 'row',
+            }}>
+              <Ionicons name="thumbs-up-outline" color='green' size={28} style={{ marginRight: 10 }} onPress={() => makeAddressLine()} />
+              <Ionicons name="thumbs-down-outline" color='red' size={28} style={{ marginLeft: 10 }} onPress={() => setUpAddressLineNull()} />
+            </View>
+          </View>
+        </ModalPop>
+
+      </View>
 
       <View style={styles.view}>
         <Text style={styles.text}>Username</Text>
@@ -118,12 +178,15 @@ export default function UserSignUp({ navigation }) {
           autoCapitalize="none"
           value={customerEmail}
         />
-        <Text style={styles.text}>Endereço</Text>
-        <TextInput
+        <Text style={styles.text}>CEP</Text>
+        <TextInputMask
+          type='custom'
+          options={{ mask: '99999-999' }}
           style={styles.fieldInput}
-          placeholder="Choose an email address"
+          placeholder="Digite seu CEP"
           onChangeText={setCustomerAddress}
           value={customerAddress}
+          keyboardType='numeric'
           autoCapitalize="none"
         />
         <View style={styles.container}>
@@ -135,23 +198,39 @@ export default function UserSignUp({ navigation }) {
             keyboardType="numeric"
             value="birthDay"
             onChangeText={setBirthday}
-            style={styles.textInputModal}
+            placeholder='Data de Aniversário'
+            style={styles.fieldInput}
           />
 
         </View>
-        <Button
-          title="SignUp"
-          color="red"
-          onPress={() =>
-            registerUser(
-              customerName,
-              customerAddress,
-              customerEmail,
-              customerPassword,
-              birthday
-            )
-          }
-        />
+        <View style={{ top: 15 }}>
+
+          <Button
+            title="SignUp"
+            color="red"
+            onPress={() => {
+              if (customerAddress.length > 6) {
+
+                axios.get('https://viacep.com.br/ws/' + customerAddress + '/json/').then(function (response) {
+                  if (response.data.erro === true) {
+                    Alert.alert('CEP não encontrado... \nJá pensou em viver em sociedade? 🤪')
+                  } else {
+                    setAddressInfo(response.data)
+                    changeVisibility()
+                  }
+
+                }).catch(function (error) {
+
+                })
+              } else{
+                Alert.alert('Digite um CEP válido.')
+              }
+
+            }
+
+            }
+          />
+        </View>
       </View>
     </View>
   );
@@ -161,7 +240,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    flex: 1,
+    top: 10
   },
   view: {
     height: "60%",
@@ -199,5 +278,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     textAlign: 'center'
+  }, modalBackGround: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
+  modalContainer: {
+    width: '70%',
+    backgroundColor: 'white',
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    borderRadius: 20,
+    elevation: 20,
+    height: '30%'
+  },
+  header: {
+    width: '100%',
+    height: 40,
+    alignItems: 'flex-end',
+    justifyContent: 'center'
+  },
+  textModal: {
+    textAlign: 'center',
+    fontSize: 18,
+    justifyContent: 'center'
+
+  }
 });
