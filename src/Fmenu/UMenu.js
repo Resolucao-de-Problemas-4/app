@@ -16,7 +16,6 @@ import { Alert, BackHandler } from "react-native";
 import MapView from "react-native-maps";
 import { tokenInfoCliente } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { StackActions, NavigationActions, NavigationContainer } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
 import * as Location from "expo-location";
@@ -180,6 +179,7 @@ export default function Fmenu({ navigation }) {
     tokenInfoCliente.token = "";
     tokenInfoCliente.cnh = "";
     isReady = false;
+    console.log(tokenInfoCliente)
 
     navigation.navigate("Home");
   }
@@ -224,7 +224,7 @@ export default function Fmenu({ navigation }) {
 
       <View style={{ justifyContent: "flex-start" }}>
         <View style={{ margin: 120, padding: 50, right: 160, bottom: 120 }}>
-          <Button title="logout" onPress={() => logout()} />
+          {/* <Button title="logout" onPress={() => logout()} /> */}
         </View>
       </View>
 
@@ -257,6 +257,17 @@ export default function Fmenu({ navigation }) {
                   <Ionicons name="car" size={24} style={{ marginLeft: 5 }} color="black" />
                   <Text style={styles.textModal}>
                     MINHA CORRIDAS
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => logout()}>
+              <View style={styles.viewModal}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="wallet" size={24} style={{ marginLeft: 5 }} color="black" onPress={() => changeVisibility()} />
+                  <Text style={styles.textModal}>
+                    ENCERRAR SESSÃO
                   </Text>
                 </View>
               </View>
@@ -440,5 +451,13 @@ const styles = StyleSheet.create({
     marginLeft: 10, fontSize: 15, marginRight: 15
 
   },
-  viewModal: { borderWidth: 1, borderRadius: 10, width: '100%', height: 45, justifyContent: 'center', marginTop: 20 }
+  viewModal: {
+    borderWidth: 1,
+    borderRadius: 10,
+    width: '100%',
+    height: 45,
+    justifyContent: 'center',
+    marginTop: 20,
+     padding: 10
+  }
 });
