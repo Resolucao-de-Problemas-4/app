@@ -9,10 +9,10 @@ import {
   Image,
 } from "react-native";
 import axios from "axios";
-import DatePicker from "react-native-datepicker";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { USER_ROUTE } from "../api/user";
+import { TextInputMask } from "react-native-masked-text";
 
 export default function UserSignUp({ navigation }) {
   const date = new Date();
@@ -21,7 +21,7 @@ export default function UserSignUp({ navigation }) {
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPassword, setCustomerPassword] = useState("");
 
-  const [Birthday, setBirthday] = useState(date);
+  const [birthday, setBirthday] = useState(date);
 
   function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
@@ -39,16 +39,16 @@ export default function UserSignUp({ navigation }) {
     customerAddress,
     customerEmail,
     customerPassword,
-    Birthday
+    birthday
   ) {
     if (
       customerName == "" ||
       customerAddress == "" ||
       customerEmail == "" ||
       customerPassword == "" ||
-      Birthday == ""
+      birthday == ""
     ) {
-      console.log();
+      // birthValidation('02/08/2002')
       Alert.alert("Preencha todos os campos!");
       return "Preencha os Campos";
     }
@@ -56,19 +56,19 @@ export default function UserSignUp({ navigation }) {
       Alert.alert("Insira um email valido");
       return "Preencha os Campos";
     }
-    const age = validateBirth(Birthday);
+    const age = validateBirth(birthday);
     if (age < 18) {
       Alert.alert("Você não tem a idade mínima para se inscrever.");
       return "Preencha os Campos";
     }
 
     axios
-      .post(API_REST+""+ PORT +""+USER_ROUTE, {
+      .post(API_REST + "" + PORT + "" + USER_ROUTE, {
         customerName: customerName,
         customerAddress: customerAddress,
         customerEmail: customerEmail,
         customerPassword: customerPassword,
-        customerBirthday: Birthday,
+        customerBirthday: birthday,
       })
       .then(function (response) {
         if (response.status === 201) {
@@ -87,6 +87,9 @@ export default function UserSignUp({ navigation }) {
         style={styles.logo}
         source={{ uri: "https://i.imgur.com/0FltieF.png" }}
       />
+
+
+
       <View style={styles.view}>
         <Text style={styles.text}>Username</Text>
         <TextInput
@@ -123,17 +126,18 @@ export default function UserSignUp({ navigation }) {
           value={customerAddress}
           autoCapitalize="none"
         />
-        <View>
+        <View style={styles.container}>
           <Text style={styles.text}>Data de Nascimento</Text>
 
-          <DatePicker
-            format="MM/DD/YYYY"
-            minDate="01/01/1970"
-            maxDate="01/01/2022"
-            value={Birthday}
-            style={styles.date}
-            onDateChange={setBirthday}
+          <TextInputMask
+            type='datetime'
+            options={{ format: 'DD/MM/YYYY' }}
+            keyboardType="numeric"
+            value="birthDay"
+            onChangeText={setBirthday}
+            style={styles.textInputModal}
           />
+
         </View>
         <Button
           title="SignUp"
@@ -144,7 +148,7 @@ export default function UserSignUp({ navigation }) {
               customerAddress,
               customerEmail,
               customerPassword,
-              Birthday
+              birthday
             )
           }
         />
@@ -177,6 +181,7 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     fontWeight: "bold",
     textAlign: "center",
+    justifyContent: 'center'
   },
   date: {
     width: "100%",
@@ -186,5 +191,13 @@ const styles = StyleSheet.create({
     width: 240,
     height: 200,
     marginBottom: 5,
+  }, textInputModal: {
+    borderBottomWidth: 1,
+    marginTop: 5,
+    borderBottomColor: '#ccc',
+    width: '70%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    textAlign: 'center'
   },
 });
