@@ -52,18 +52,18 @@ export default function List({ navigation }) {
     if (rate > 5 || rate < 1 || rate === '' || rate === null) {
       Alert.alert('Nota informada está errada')
     } else {
-        
+
       axios.post(API_REST + '' + PORT + '/api/rating', {
         // token:tokenInfoCliente.token
         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhZmZmZDk0LWJlNzgtNGFhOC05NzMwLWQ1MDIyN2JlMDU3ZCIsImlhdCI6MTY0NDI4MDcxOSwiZXhwIjoxNjQ0MzY3MTE5fQ.eQ9i6JDvzsGyD-dvaxBl-_t43U9eEFKisasklGH9gic",
         rating: Number(rate),
         review: description,
         idCorrida: item.id,
-      }).then(function (response){
+      }).then(function (response) {
         Alert.alert('Prontinho!')
         setItem('')
         changeVisibility()
-      }).catch(function(error){
+      }).catch(function (error) {
         setItem('')
         Alert.alert('Erro')
         changeVisibility()
@@ -107,7 +107,6 @@ export default function List({ navigation }) {
                     Valor: R${item.valorViagem}
                   </Text>
                   <Ionicons name="expand-outline" size={24} color="black" style={{ alignItems: 'flex-end' }} onPress={() => infos(item)} />
-
                 </View>
               </View>
             </View>
@@ -116,25 +115,27 @@ export default function List({ navigation }) {
       />
       <ModalPopUp visible={visible}>
         <View style={styles.viewModal}>
-          <Ionicons name="close-circle-outline" size={24} color="red" style={{ alignItems: 'flex-end' }} onPress={() => closeInfo()} />
-          <Text style={styles.text}>Destino da viagem: {item.destinoFinal}</Text>
-          <Text style={styles.text}>Data: {item.dataViagem}</Text>
-          <Text style={styles.text}>Hora da solicitação: {item.horaSolicitacao}</Text>
-          <Text style={styles.text}>Valor da Viagem: R${item.valorViagem}</Text>
-          <TextInput
-            style={styles.textInputModal}
-            placeholder="5"
-            value={rate}
-            onChangeText={setRate}
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={styles.textInputModal}
-            placeholder="Amei a viagem! Ele me deu bala. (Opcional)"
-            value={description}
-            onChangeText={setDescription}
-          />
-          <Ionicons name="checkmark-done-outline" size={24} color="black" onPress={() => sendRate()} style={{ alignItems: 'baseline' }} />
+          <Ionicons name="close-circle-outline" size={24} color="red" style={{ alignSelf: 'flex-end' }} onPress={() => closeInfo()} />
+          <View style={{padding: 15}}>
+            <Text style={styles.textModal}>Destino da viagem: {item.destinoFinal}</Text>
+            <Text style={styles.textModal}>Data: {item.dataViagem}</Text>
+            <Text style={styles.textModal}>Hora da solicitação: {item.horaSolicitacao}</Text>
+            <Text style={styles.textModal}>Valor da Viagem: R${item.valorViagem}</Text>
+            <TextInput
+              style={styles.textInputModal}
+              placeholder="5"
+              value={rate}
+              onChangeText={setRate}
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={[styles.textInputModal, { height: '45%', textAlign: 'justify', textAlignVertical: 'top' }]}
+              placeholder="Amei a viagem! Ele me deu bala. (Opcional)"
+              value={description}
+              onChangeText={setDescription}
+            />
+          </View>
+          <Ionicons name="checkmark-done-outline" size={24} color="black" onPress={() => sendRate()} style={{ alignSelf: 'flex-end', top: '15%' }} />
         </View>
       </ModalPopUp>
 
@@ -187,7 +188,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 15
-  }, modalBackGround: {
+  },
+  modalBackGround: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
@@ -203,26 +205,27 @@ const styles = StyleSheet.create({
   },
   viewModal: {
     width: '100%',
-    height: '55%',
+    height: '65%',
+    justifyContent: 'flex-start',
+  },
+  modalBackGround: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
-    padding: 26,
+    alignItems: 'center'
   },
   textInputModal: {
     borderWidth: 1,
-    marginTop: 5,
+    marginTop: '5%',
     borderBottomColor: '#ccc',
     width: '70%',
     justifyContent: 'center',
     alignSelf: 'center',
     textAlign: 'center'
   },
-  textModal: {
-    textAlign: 'center', top: 130, color: 'black'
-  }, modalBackGround: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
+  textModal:{
+    marginBottom:'3%',
+    fontSize: 15,
+  }
 
 });
