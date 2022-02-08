@@ -23,6 +23,11 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
+          name="RacesList"
+          component={RacesList}
+          options={{ title: 'Lista de Corridas' }}
+        />
+        <Stack.Screen
           name="Home"
           component={Home}
           options={{ title: "Bem-vindo!" }}
@@ -77,17 +82,10 @@ export default function App() {
           component={FinalRoute}
           options={{ headerShown: false }}
         />
-
         <Stack.Screen
           name="CardScreen"
           component={CardScreen}
-          options={{title:'Cartões'}}
-        />
-        
-        <Stack.Screen
-          name="RacesList"
-          component={RacesList}
-          options={{title: 'Lista de Corridas'}}
+          options={{ title: 'Cartões' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
