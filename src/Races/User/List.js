@@ -37,8 +37,7 @@ export default function List({ navigation }) {
 
   useEffect(() => {
     axios.post(API_REST + '' + PORT + '/api/race-u-list', {
-      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhZmZmZDk0LWJlNzgtNGFhOC05NzMwLWQ1MDIyN2JlMDU3ZCIsImlhdCI6MTY0NDI4MDcxOSwiZXhwIjoxNjQ0MzY3MTE5fQ.eQ9i6JDvzsGyD-dvaxBl-_t43U9eEFKisasklGH9gic"
-      // token: tokenInfoCliente.token
+    token: tokenInfoCliente.token
     }).then(function (response) {
       data = response.data.races
       setRacesList(data)
@@ -55,7 +54,7 @@ export default function List({ navigation }) {
 
       axios.post(API_REST + '' + PORT + '/api/rating', {
         // token:tokenInfoCliente.token
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhZmZmZDk0LWJlNzgtNGFhOC05NzMwLWQ1MDIyN2JlMDU3ZCIsImlhdCI6MTY0NDI4MDcxOSwiZXhwIjoxNjQ0MzY3MTE5fQ.eQ9i6JDvzsGyD-dvaxBl-_t43U9eEFKisasklGH9gic",
+        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhZmZmZDk0LWJlNzgtNGFhOC05NzMwLWQ1MDIyN2JlMDU3ZCIsImlhdCI6MTY0NDc4MzcyNSwiZXhwIjoxNjQ0ODcwMTI1fQ.RG5QgRKtjfOV439qErA-xNctEGARxxDksy9Gk6LASsU',
         rating: Number(rate),
         review: description,
         idCorrida: item.id,
