@@ -239,6 +239,28 @@ export default function Fmenu({ navigation }) {
               </View>
               <Ionicons name="close-circle-outline" size={24} color="red" style={{ alignItems: 'flex-end' }} onPress={() => changeVisibility()} />
             </View>
+            
+            <TouchableOpacity onPress={() => console.log("Not Yet Implemented")}>
+              <View style={styles.viewModal}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name="person-circle-outline" size={24} color="black" />
+                  <Text style={styles.textModal}>
+                    Perfil
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => navigation.navigate('RacesList')}>
+              <View style={styles.viewModal}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="car-sport-outline" size={24} color="black" />
+                  <Text style={styles.textModal}>
+                    MINHA CORRIDAS
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.navigate('CardScreen')}>
               <View style={styles.viewModal}>
@@ -251,21 +273,11 @@ export default function Fmenu({ navigation }) {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate('RacesList')}>
-              <View style={styles.viewModal}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Ionicons name="person-circle-outline" size={24} color="black" />
-                  <Text style={styles.textModal}>
-                    MINHA CORRIDAS
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
 
             <TouchableOpacity onPress={() => logout()}>
               <View style={styles.viewModal}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Ionicons name="wallet" size={24} style={{ marginLeft: 5 }} color="black" onPress={() => changeVisibility()} />
+                  <Ionicons name="log-out-outline" size={24} style={{ marginLeft: 5 }} color="black" onPress={() => changeVisibility()} />
                   <Text style={styles.textModal}>
                     ENCERRAR SESSÃO
                   </Text>
