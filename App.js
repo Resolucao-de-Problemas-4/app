@@ -16,6 +16,7 @@ import DSMenu from './src/Smenu/DMenu'
 import FinalRoute from './src/FinalRoute'
 import CardScreen from "./src/card";
 import RacesList from './src/Races/User/List'
+import UserProfile from './src/Profile/User'
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -86,6 +87,11 @@ export default function App() {
           name="RacesList"
           component={RacesList}
           options={{ title: 'Lista de Corridas' }}
+        />
+        <Stack.Screen
+          name="UserProfile"
+          component={UserProfile}
+          options={{ title: "Perfil" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

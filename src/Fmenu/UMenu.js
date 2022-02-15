@@ -240,7 +240,7 @@ export default function Fmenu({ navigation }) {
               <Ionicons name="close-circle-outline" size={24} color="red" style={{ alignItems: 'flex-end' }} onPress={() => changeVisibility()} />
             </View>
             
-            <TouchableOpacity onPress={() => console.log("Not Yet Implemented")}>
+            <TouchableOpacity onPress={() => navigation.navigate('UserProfile')}>
               <View style={styles.viewModal}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Ionicons name="person-circle-outline" size={24} color="black" />

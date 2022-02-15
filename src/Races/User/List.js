@@ -1,30 +1,21 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
-  Button,
   Modal,
-  Dimensions,
-  TouchableOpacity,
   FlatList
 } from "react-native";
-import { Alert, BackHandler } from "react-native";
+import { Alert } from "react-native";
 
 import { tokenInfoCliente } from "../../token";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { StackActions, NavigationActions, NavigationContainer } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
-import * as Location from "expo-location";
 import axios from "axios";
 import { API_REST } from "../../api/api";
 import { PORT } from "../../api/port";
-import { corridaData } from "../../token/corrida";
-import style from "react-native-datepicker/style";
-
 
 
 export default function List({ navigation }) {
@@ -37,13 +28,15 @@ export default function List({ navigation }) {
 
   useEffect(() => {
     axios.post(API_REST + '' + PORT + '/api/race-u-list', {
-    token: tokenInfoCliente.token
-    }).then(function (response) {
-      data = response.data.races
-      setRacesList(data)
-    }).catch(function (error) {
-      setRacesList(null)
+      token: tokenInfoCliente.token
     })
+      .then(function (response) {
+        data = response.data.races
+        setRacesList(data)
+      })
+      .catch(function (error) {
+        setRacesList(null)
+      })
   }, []);
 
 
@@ -53,8 +46,7 @@ export default function List({ navigation }) {
     } else {
 
       axios.post(API_REST + '' + PORT + '/api/rating', {
-        // token:tokenInfoCliente.token
-        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhZmZmZDk0LWJlNzgtNGFhOC05NzMwLWQ1MDIyN2JlMDU3ZCIsImlhdCI6MTY0NDc4MzcyNSwiZXhwIjoxNjQ0ODcwMTI1fQ.RG5QgRKtjfOV439qErA-xNctEGARxxDksy9Gk6LASsU',
+        token: tokenInfoCliente.token,
         rating: Number(rate),
         review: description,
         idCorrida: item.id,
@@ -115,7 +107,7 @@ export default function List({ navigation }) {
       <ModalPopUp visible={visible}>
         <View style={styles.viewModal}>
           <Ionicons name="close-circle-outline" size={24} color="red" style={{ alignSelf: 'flex-end' }} onPress={() => closeInfo()} />
-          <View style={{padding: 15}}>
+          <View style={{ padding: 15 }}>
             <Text style={styles.textModal}>Destino da viagem: {item.destinoFinal}</Text>
             <Text style={styles.textModal}>Data: {item.dataViagem}</Text>
             <Text style={styles.textModal}>Hora da solicitação: {item.horaSolicitacao}</Text>
@@ -141,8 +133,6 @@ export default function List({ navigation }) {
     </View>
   )
 }
-
-
 
 const ModalPopUp = ({ visible, children }) => {
   return (
@@ -222,8 +212,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center'
   },
-  textModal:{
-    marginBottom:'3%',
+  textModal: {
+    marginBottom: '3%',
     fontSize: 15,
   }
 
