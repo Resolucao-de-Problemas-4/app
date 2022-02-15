@@ -1,0 +1,1 @@
+export const DRIVER_INFO = '/api/driver-info'

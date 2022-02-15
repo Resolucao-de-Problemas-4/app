@@ -10,27 +10,27 @@ import {
     Image
 } from "react-native";
 import { Alert } from "react-native";
-import { tokenInfoCliente } from "../token/";
+import { tokenInfoCliente, tokenInfoMotorista } from "../token/";
 import { Ionicons } from '@expo/vector-icons';
 import axios from "axios";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port"
-import { USER_INFO } from "../api/userinfo";
+import { DRIVER_INFO } from "../api/driverinfo";
 
 
-export default function UserProfile() {
+export default function DriverProfile() {
 
-    const [userInfo, setUserInfo] = useState([])
+    const [driverInfo, setDriverInfo] = useState([])
 
-    axios.post(API_REST + "" + PORT + "" + USER_INFO, {
-        token: tokenInfoCliente.token
+    axios.post(API_REST + "" + PORT + "" + DRIVER_INFO, {
+        token: tokenInfoMotorista.token
     })
         .then(function (response) {
             data = response.data
-            setUserInfo(data)
+            setDriverInfo(data)
         })
         .catch(function (error) {
-            setUserInfo(null)
+            setDriverInfo(null)
         });
     // console.log(userInfo)
     return (
@@ -42,22 +42,26 @@ export default function UserProfile() {
                         source={{ uri: "https://imgur.com/dKyVwEf.gif" }}
                     />
                 </View>
-                <Text style={[styles.text, { fontWeight: 'bold', marginBottom: '15%', alignSelf: 'center', fontSize: 26, textAlign: 'center' }]}>{userInfo.name}</Text>
+                <Text style={[styles.text, { fontWeight: 'bold', marginBottom: '15%', alignSelf: 'center', fontSize: 26, textAlign: 'center' }]}>{driverInfo.name}</Text>
                 <View style={styles.textView}>
                     <Ionicons name="star" size={24} color="black" style={{ marginRight: '3%' }} />
                     <Text style={styles.text}>?</Text>
                 </View>
                 <View style={styles.textView}>
                     <Ionicons name="mail" size={24} color="black" style={{ marginRight: '3%' }} />
-                    <Text style={styles.text}>{userInfo.email}</Text>
+                    <Text style={styles.text}>{driverInfo.email}</Text>
+                </View>
+                <View style={styles.textView}>
+                    <Ionicons name="call" size={24} color="black" style={{ marginRight: '3%' }} />
+                    <Text style={styles.text}>{driverInfo.phoneNumber}</Text>
                 </View>
                 <View style={styles.textView}>
                     <Ionicons name="pin" size={24} color="black" style={{ marginRight: '3%' }} />
-                    <Text style={styles.text}>{userInfo.address}</Text>
+                    <Text style={styles.text}>{driverInfo.address}</Text>
                 </View>
                 <View style={styles.textView}>
-                    <Ionicons name="calendar" size={24} color="black" style={{ marginRight: '3%' }} />
-                    <Text style={styles.text}>{userInfo.birthday}</Text>
+                    <Ionicons name="person" size={24} color="black" style={{ marginRight: '3%' }} />
+                    <Text style={styles.text}>CNH: {driverInfo.CNH}</Text>
                 </View>
             </View>
         </View>

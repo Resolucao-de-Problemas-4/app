@@ -11,6 +11,7 @@ import {
   Alert,
   BackHandler,
   Dimensions,
+  TouchableOpacity
 } from "react-native";
 import { RACE_SEARCH } from "../api/racesearch";
 import { RACE_UPDATE } from "../api/raceupdate";
@@ -21,6 +22,8 @@ import MapViewDirections from "react-native-maps-directions";
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import { corridaData } from "../token/corrida";
+import { Ionicons } from '@expo/vector-icons';
+
 let deniedlist = [];
 
 export default function Fmenu({ navigation }) {
@@ -32,6 +35,7 @@ export default function Fmenu({ navigation }) {
   const [endereco, setEndereco] = useState(null);
   const [corridaAceita, setcorridaAceita] = useState(false);
   const [destination, setDestination] = useState(null);
+  const [visible, setVisible] = useState(false)
 
   const mapEl = useRef(null);
 
@@ -59,6 +63,14 @@ export default function Fmenu({ navigation }) {
       });
     })();
   }, []);
+
+  const changeVisibility = () => {
+    if (visible) {
+      setVisible(false)
+    } else {
+      setVisible(true)
+    }
+  };
 
   function logout() {
     tokenInfoMotorista.email = "";
@@ -192,11 +204,74 @@ export default function Fmenu({ navigation }) {
           />
         </MapView>
       </View>
-      {/* <Text style={styles.title}>driverName</Text> */}
+
       <View style={{ justifyContent: "flex-start" }}>
         <View style={{ left: "50%", top: "180%", width: "30%" }}>
-          <Button title="logout" onPress={() => logout()} />
+          {/* <Button title="logout" onPress={() => logout()} /> */}
         </View>
+      </View>
+
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ModalPopUp visible={visible}>
+          <View style={{ alignItems: 'center' }}>
+            <View style={styles.header}>
+              <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                <Text>INFORMAÇÕES DO USUÁRIO</Text>
+              </View>
+              <Ionicons name="close-circle-outline" size={24} color="red" style={{ alignItems: 'flex-end' }} onPress={() => changeVisibility()} />
+            </View>
+
+            <TouchableOpacity onPress={() => navigation.navigate('DriverProfile')}>
+              <View style={styles.viewModal}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="person-circle-outline" size={24} color="black" />
+                  <Text style={styles.textModal}>
+                    Perfil
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => console.log("Not Yet Implemented")}>
+              <View style={styles.viewModal}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="car-sport-outline" size={24} color="black" />
+                  <Text style={styles.textModal}>
+                    MINHA CORRIDAS
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => console.log("Not Yet Implemented")}>
+              <View style={styles.viewModal}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="wallet" size={24} style={{ marginLeft: 5 }} color="black" onPress={() => changeVisibility()} />
+                  <Text style={styles.textModal}>
+                    FORMA DE PAGAMENTO
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity onPress={() => logout()}>
+              <View style={styles.viewModal}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="log-out-outline" size={24} style={{ marginLeft: 5 }} color="black" onPress={() => changeVisibility()} />
+                  <Text style={styles.textModal}>
+                    ENCERRAR SESSÃO
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+
+          </View>
+        </ModalPopUp>
+      </View >
+
+      <View style={{ flex: 1, top: '250%', left: '85%', position: 'absolute', width: '100%', height: '100%', justifyContent: 'center' }}>
+        <Ionicons name="person-circle-outline" size={48} color="black" onPress={() => changeVisibility()} />
       </View>
 
       <View style={{ justifyContent: "center" }}>
@@ -222,6 +297,18 @@ export default function Fmenu({ navigation }) {
       </Modal>
     </View>
   );
+}
+
+const ModalPopUp = ({ visible, children }) => {
+  return (
+    <Modal transparent visible={visible}>
+      <View style={styles.modalBackGround}>
+        <View style={[styles.modalContainer]}>
+          {children}
+        </View>
+      </View>
+    </Modal>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -258,5 +345,32 @@ const styles = StyleSheet.create({
   map: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
+  },
+  textModal: {
+    marginLeft: 10, fontSize: 15, marginRight: 15
+
+  },
+  viewModal: {
+    borderWidth: 1,
+    borderRadius: 10,
+    width: '100%',
+    height: 45,
+    justifyContent: 'center',
+    marginTop: 20,
+    padding: 10
+  },
+  modalBackGround: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  modalContainer: {
+    width: '80%',
+    backgroundColor: 'white',
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    borderRadius: 20,
+    elevation: 20
   },
 });

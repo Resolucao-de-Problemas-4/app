@@ -17,6 +17,7 @@ import FinalRoute from './src/FinalRoute'
 import CardScreen from "./src/card";
 import RacesList from './src/Races/User/List'
 import UserProfile from './src/Profile/User'
+import DriverProfile from './src/Profile/Driver'
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -91,6 +92,11 @@ export default function App() {
         <Stack.Screen
           name="UserProfile"
           component={UserProfile}
+          options={{ title: "Perfil" }}
+        />
+        <Stack.Screen
+          name="DriverProfile"
+          component={DriverProfile}
           options={{ title: "Perfil" }}
         />
       </Stack.Navigator>

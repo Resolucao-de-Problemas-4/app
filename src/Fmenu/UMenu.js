@@ -12,7 +12,6 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Alert, BackHandler } from "react-native";
-
 import MapView from "react-native-maps";
 import { tokenInfoCliente } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -218,7 +217,7 @@ export default function Fmenu({ navigation }) {
         </MapView>
       </View>
 
-      <View style={{ top: "180%", width: "30%", left: "35%",position:'absolute' }}>
+      <View style={{ top: "180%", width: "30%", left: "35%", position: 'absolute' }}>
         <Button title="cancelar" onPress={() => cancelarCorrida()} />
       </View>
 
@@ -228,9 +227,7 @@ export default function Fmenu({ navigation }) {
         </View>
       </View>
 
-      <View style={{
-        flex: 1, justifyContent: 'center', alignItems: 'center'
-      }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ModalPopUp visible={visible}>
           <View style={{ alignItems: 'center' }}>
             <View style={styles.header}>
@@ -239,11 +236,11 @@ export default function Fmenu({ navigation }) {
               </View>
               <Ionicons name="close-circle-outline" size={24} color="red" style={{ alignItems: 'flex-end' }} onPress={() => changeVisibility()} />
             </View>
-            
+
             <TouchableOpacity onPress={() => navigation.navigate('UserProfile')}>
               <View style={styles.viewModal}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name="person-circle-outline" size={24} color="black" />
+                  <Ionicons name="person-circle-outline" size={24} color="black" />
                   <Text style={styles.textModal}>
                     Perfil
                   </Text>
@@ -470,6 +467,6 @@ const styles = StyleSheet.create({
     height: 45,
     justifyContent: 'center',
     marginTop: 20,
-     padding: 10
+    padding: 10
   }
 });
