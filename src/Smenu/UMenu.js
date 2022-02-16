@@ -14,35 +14,54 @@ import axios from "axios";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { corridaData } from "../token/corrida";
-var isReady = true
 
 export default function USMENU({ navigation }) {
+  const [isReady, setIsReady] = useState(true)
   const mapEl = useRef(null);
   const [idCorrida, setIdCorrida] = useState(null);
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
-
+  var time;
 
   function intervalTIME() {
-    var time = setInterval(function () {
-
-      if (isReady === false) {
-        clearInterval(time)
-      }
-      verify()
-    }, 2000)
-
+    if (time === null || time === undefined) {
+      time = setInterval(function () {
+        if (isReady === false) {
+          clearInterval(time)
+        }
+        verify()
+      }, 1000)
+    }
   }
 
   function verify() {
+    
     axios
       .post(API_REST + "" + PORT + "/api/race-verify-finish", {
         idCorrida: corridaData.corrida.idCorrida,
       }).then(function (response) {
-        if (response.status === 200) {
-          isReady = false
-          navigation.navigate(("UMenu"))
-        }
+        setIsReady(false)
+
+        Alert.alert('Pronto!')
+
+        corridaData.motorista.name = ''
+        corridaData.motorista.phoneNumber = ''
+        corridaData.motorista.email = ''
+        corridaData.carro.plate = ''
+        corridaData.carro.renavan = ''
+        corridaData.carro.year = ''
+        corridaData.carro.model = ''
+        corridaData.carro.marca = ''
+        corridaData.user.email = ''
+        corridaData.user.name = ''
+        corridaData.corrida.idCorrida = ''
+        corridaData.corrida.latitudeFinal = ''
+        corridaData.corrida.longitudeFinal = ''
+        corridaData.corrida.longitudeInicial = ''
+        corridaData.corrida.latitudeInicial = ''
+
+        navigation.navigate("UMenu")
+
       }).catch(function (error) { });
 
   }
