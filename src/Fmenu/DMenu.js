@@ -24,9 +24,9 @@ import * as Location from "expo-location";
 import { corridaData } from "../token/corrida";
 import { Ionicons } from '@expo/vector-icons';
 
-let deniedlist = [];
 
 export default function Fmenu({ navigation }) {
+  const [deniedList, setDeniedList] = useState([])
   const [idCorrida, setidCorrida] = useState(null);
   const [latitudeF, setlatitudeF] = useState(null);
   const [longitudeF, setlongitudeF] = useState(null);
@@ -85,7 +85,7 @@ export default function Fmenu({ navigation }) {
     axios
       .post(API_REST + "" + PORT + "" + RACE_SEARCH, {
         token: tokenInfoMotorista.token,
-        denied: deniedlist,
+        denied: deniedList,
       })
       .then(function (response) {
         if (response.status === 200) {
@@ -97,7 +97,7 @@ export default function Fmenu({ navigation }) {
           setupdateRaceBox(true);
         } else if (response.status === 201) {
           Alert.alert("Nenhuma corrida no momento... 🤯🚗");
-          deniedlist = [];
+          setDeniedList([])
           setupdateRaceBox(false);
         }
       })
@@ -151,7 +151,7 @@ export default function Fmenu({ navigation }) {
   }
 
   function decline() {
-    deniedlist.push({ corridaID: idCorrida });
+    setDeniedList(deniedlist.push({ corridaID: idCorrida }));
 
     corridaData.motorista.phoneNumber = "";
     corridaData.motorista.email = "";
@@ -168,7 +168,7 @@ export default function Fmenu({ navigation }) {
     corridaData.corrida.longitudeInicial = "";
     corridaData.corrida.latitudeInicial = "";
 
-    // console.log(JSON.stringify(deniedlist)) print no console da lista de corridas recusadas
+     console.log(JSON.stringify(deniedList))
     search();
   }
 
