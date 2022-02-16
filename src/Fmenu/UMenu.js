@@ -9,19 +9,21 @@ import {
   Button,
   Modal,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from "react-native";
 import { Alert, BackHandler } from "react-native";
 import MapView from "react-native-maps";
 import { tokenInfoCliente } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Ionicons } from '@expo/vector-icons';
-
+import { Marker } from 'react-native-maps';
 import * as Location from "expo-location";
 import axios from "axios";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { corridaData } from "../token/corrida";
+import { StackActions } from "@react-navigation/native";
 
 let isReady = false;
 let destino = "";
@@ -35,6 +37,8 @@ export default function Fmenu({ navigation }) {
   const mapEl = useRef(null);
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
+  const [places, setPlaces] = useState(true)
+  const [initialPlace, setInitialPlace] = useState(null)
   let time;
   const [visible, setVisible] = useState(false)
   let count = 0;
@@ -77,7 +81,6 @@ export default function Fmenu({ navigation }) {
         if (isReady === false) {
           clearInterval(time)
         }
-        console.log(count++)
         verify()
       }, 1000)
     }
@@ -111,10 +114,7 @@ export default function Fmenu({ navigation }) {
           corridaData.corrida.longitudeFinal = data.corrida.longitudeFinal
           corridaData.corrida.longitudeInicial = data.corrida.longitudeOrigem
           corridaData.corrida.latitudeInicial = data.corrida.latitudeOrigem
-
-          console.log(destination, origin)
-
-          navigation.navigate("USMenu");
+          navigation.dispatch(StackActions.replace("USMenu"));
         } else if (response.status === 201) { }
       }).catch(function (error) {
       });
@@ -136,8 +136,15 @@ export default function Fmenu({ navigation }) {
         latitudeDelta: 0.00922,
         longitudeDelta: 0.00621,
       });
+      setInitialPlace({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.00922,
+        longitudeDelta: 0.00621,
+      });
     })();
   }, []);
+
 
   function cancelarCorrida() {
     //caso o cliente não queira mais que a corrida seja aceita, ele pode cancelar
@@ -150,7 +157,7 @@ export default function Fmenu({ navigation }) {
         })
         .then(function (response) {
           if (response.status === 201) {
-            setDestination('')
+            setDestination(null)
             Alert.alert("Corrida Cancelada...");
             isReady = false;
             idCorrida = "";
@@ -178,7 +185,6 @@ export default function Fmenu({ navigation }) {
     tokenInfoCliente.token = "";
     tokenInfoCliente.cnh = "";
     isReady = false;
-    console.log(tokenInfoCliente)
 
     navigation.navigate("Home");
   }
@@ -202,6 +208,7 @@ export default function Fmenu({ navigation }) {
             strokeColor="black"
             onReady={(result) => {
               setDistance(result.distance);
+              setPlaces(false);
               setPrice((result.distance * 2.6).toFixed(2));
               setModalV(!modalV);
               mapEl.current.fitToCoordinates(result.coordinates, {
@@ -214,12 +221,31 @@ export default function Fmenu({ navigation }) {
               });
             }}
           />
+
+          {destination && (<Marker
+            coordinate={{ latitude: destination.latitude, longitude: destination.longitude }}
+            pinColor={"purple"}
+            title={"title"}
+            description={"description"}
+
+          />)}
+
+          {origin && (<Marker
+            coordinate={{ latitude: origin.latitude, longitude: origin.longitude }}
+            pinColor={"purple"}
+            title={"Partida"}
+            description={"Eu estou aqui!!"}
+
+          />)}
+
+
+
         </MapView>
       </View>
 
-      <View style={{ top: "180%", width: "30%", left: "35%", position: 'absolute' }}>
+      {/* <View style={{ top: "180%", width: "30%", left: "35%", position: 'absolute' }}>
         <Button title="cancelar" onPress={() => cancelarCorrida()} />
-      </View>
+      </View> */}
 
       <View style={{ justifyContent: "flex-start" }}>
         <View style={{ margin: 120, padding: 50, right: 160, bottom: 120 }}>
@@ -290,20 +316,54 @@ export default function Fmenu({ navigation }) {
         <Ionicons name="person-circle-outline" size={48} color="black" onPress={() => changeVisibility()} />
       </View>
 
-      <View style={{ flex: 1, bottom: 200, position: 'absolute', width: '75%', left: 30 }}>
+      {places && origin && initialPlace && (<View style={{ flex: 20, bottom: 200, position: 'absolute', width: '75%', left: 30 }}>
         <GooglePlacesAutocomplete
           minLength={5}
-          placeholder="Para onde vamos?"
+          placeholder="Local de Partida"
+          predefinedPlaces={[{ latitude: initialPlace.latitude, longitude: initialPlace.longitude, description: 'Seu Local' }]}
+          predefinedPlacesAlwaysVisible={true}
+          onPress={(data, details = null) => {
 
+            if (details.description === ('Seu Local')) {
+              setOrigin({
+                latitude: details.latitude,
+                longitude: details.longitude,
+                latitudeDelta: 0.000922,
+                longitudeDelta: 0.000621,
+              });
+            } else {
+
+              setOrigin({
+                latitude: details.geometry.location.lat,
+                longitude: details.geometry.location.lng,
+                latitudeDelta: 0.000922,
+                longitudeDelta: 0.000621,
+              });
+            }
+          }
+          }
+
+          query={{
+            key: "AIzaSyD1u6IQERI6G3w8MhnvzPzh4NZSen9KO_U",
+            language: "pt-br",
+          }}
+          enablePoweredByContainer={false}
+          fetchDetails={true}
+          styles={{
+            listView: styles.listView,
+            keyboardShouldPersistTaps: "handled",
+          }}
+        />
+     </View>)}
+
+      {places && origin && initialPlace && (<View style={{ flex: 1, bottom: 70, position: 'absolute', width: '75%', left: 30 }}>
+          <GooglePlacesAutocomplete
+          minLength={5}
+          placeholder="Para onde vamos?"
+          
           onPress={(data, details = null) => {
 
             destino = details.formatted_address;
-            // const detailsZ = details.address_components;
-            // detailsZ.forEach(element => {
-            //   if (element.types[0] === 'administrative_area_level_1') {
-            //     console.log(element.short_name)
-            //   }
-            // });
             setDestination({
               latitude: details.geometry.location.lat,
               longitude: details.geometry.location.lng,
@@ -323,8 +383,12 @@ export default function Fmenu({ navigation }) {
             listView: styles.listView,
             keyboardShouldPersistTaps: "handled",
           }}
+          
         />
-      </View>
+
+
+      </View>)}
+
 
       {
         distance && (
@@ -367,7 +431,8 @@ export default function Fmenu({ navigation }) {
                     title="Ainda não..."
                     onPress={() => {
                       setModalV(false)
-                      setDestination('')
+                      setDestination(null)
+                      setPlaces(true)
                     }}
                     color="#8B0000"
                   />
@@ -468,5 +533,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
     padding: 10
+  }, mapMarkerImage: {
+    width: 90,
+    height: 45,
+    resizeMode: 'cover'
   }
 });
