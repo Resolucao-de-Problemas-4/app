@@ -46,7 +46,7 @@ export default function DSMenu({ navigation }) {
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
+      const location = await Location.getCurrentPositionAsync({});
 
       setDriverOrigin({
         latitude: location.coords.latitude,
