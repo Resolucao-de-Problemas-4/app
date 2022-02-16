@@ -21,18 +21,19 @@ import { USER_INFO } from "../api/userinfo";
 export default function UserProfile() {
 
     const [userInfo, setUserInfo] = useState([])
-
-    axios.post(API_REST + "" + PORT + "" + USER_INFO, {
-        token: tokenInfoCliente.token
-    })
-        .then(function (response) {
-            data = response.data
-            setUserInfo(data)
+    useEffect(() => {
+        axios.post(API_REST + "" + PORT + "" + USER_INFO, {
+            token: tokenInfoCliente.token
         })
-        .catch(function (error) {
-            setUserInfo(null)
-        });
-    // console.log(userInfo)
+            .then(function (response) {
+                var data = response.data
+                setUserInfo(data)
+            })
+            .catch(function (error) {
+            });
+    }, []);
+
+
     return (
         <View style={styles.container}>
             <View style={styles.item}>

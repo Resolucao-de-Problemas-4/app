@@ -22,16 +22,18 @@ export default function DriverProfile() {
 
     const [driverInfo, setDriverInfo] = useState([])
 
-    axios.post(API_REST + "" + PORT + "" + DRIVER_INFO, {
-        token: tokenInfoMotorista.token
-    })
-        .then(function (response) {
-            data = response.data
-            setDriverInfo(data)
+    useEffect(() => {
+        axios.post(API_REST + "" + PORT + "" + DRIVER_INFO, {
+            token: tokenInfoMotorista.token
         })
-        .catch(function (error) {
-            setDriverInfo(null)
-        });
+            .then(function (response) {
+                data = response.data
+                setDriverInfo(data)
+            })
+            .catch(function (error) {
+                setDriverInfo(null)
+            });
+    }, []);
     // console.log(userInfo)
     return (
         <View style={styles.container}>
