@@ -21,6 +21,7 @@ import axios from "axios";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { corridaData } from "../token/corrida";
+import { StackActions } from "@react-navigation/native";
 
 isReady = true;
 export default function USMENU({ navigation }) {
@@ -51,7 +52,7 @@ export default function USMENU({ navigation }) {
         if (response.status === 200) {
           isReady = false;
           Alert.alert('Avalie o motorista ')
-          navigation.navigate("UMenu")
+          navigation.dispatch(StackActions.replace("UMenu"))
         }
       }).catch(function (error) { });
 
@@ -85,8 +86,8 @@ export default function USMENU({ navigation }) {
       });
 
       setDestination({
-        latitude: corridaData.corrida.latitudeFinal,
-        longitude: corridaData.corrida.longitudeFinal,
+        latitude: Number(corridaData.corrida.latitudeFinal),
+        longitude: Number(corridaData.corrida.longitudeFinal),
         latitudeDelta: 0.00922,
         longitudeDelta: 0.00621,
       });
