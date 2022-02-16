@@ -21,21 +21,21 @@ export default function USMENU({ navigation }) {
   const [idCorrida, setIdCorrida] = useState(null);
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
-  var time;
+  const [time, setTime] = useState()
 
   function intervalTIME() {
     if (time === null || time === undefined) {
-      time = setInterval(function () {
+      setTime(setInterval(function () {
         if (isReady === false) {
-          clearInterval(time)
+          setTime(clearInterval(time))
         }
         verify()
-      }, 1000)
+      }, 1000))
     }
   }
 
   function verify() {
-    
+
     axios
       .post(API_REST + "" + PORT + "/api/race-verify-finish", {
         idCorrida: corridaData.corrida.idCorrida,
@@ -78,13 +78,13 @@ export default function USMENU({ navigation }) {
   useEffect(() => {
     //pede a localização do usuário.
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
+      const location = await Location.getCurrentPositionAsync({});
 
       setOrigin({
         latitude: location.coords.latitude,
