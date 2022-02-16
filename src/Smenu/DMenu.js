@@ -56,8 +56,8 @@ export default function DSMenu({ navigation }) {
       });
 
       setUserOrigin({
-        latitude: corridaData.corrida.latitudeInicial,
-        longitude: corridaData.corrida.longitudeInicial,
+        latitude: Number(corridaData.corrida.latitudeInicial),
+        longitude: Number(corridaData.corrida.longitudeInicial),
         latitudeDelta: 0.00922,
         longitudeDelta: 0.00621,
       });
