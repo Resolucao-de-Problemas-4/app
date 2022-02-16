@@ -41,7 +41,6 @@ export default function Fmenu({ navigation }) {
   const [initialPlace, setInitialPlace] = useState(null)
   let time;
   const [visible, setVisible] = useState(false)
-  let count = 0;
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => true);
