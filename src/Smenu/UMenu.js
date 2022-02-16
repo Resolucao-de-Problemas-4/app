@@ -5,43 +5,33 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
-  Button,
-  Modal,
   Dimensions,
 } from "react-native";
 import { Alert, BackHandler } from "react-native";
-
 import MapView from "react-native-maps";
-import { tokenInfoCliente } from "../token";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-
 import * as Location from "expo-location";
 import axios from "axios";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { corridaData } from "../token/corrida";
-import { StackActions } from "@react-navigation/native";
+var isReady = true
 
-isReady = true;
 export default function USMENU({ navigation }) {
   const mapEl = useRef(null);
   const [idCorrida, setIdCorrida] = useState(null);
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
-  const [time, setTime] = useState(null)
 
 
   function intervalTIME() {
-    if (time === null || time === undefined) {
-      setTime(setInterval(function () {
+    var time = setInterval(function () {
 
-        if (isReady === false) {
-          clearInterval(time)
-        }
-        verify()
-      }, 1000))
-    }
+      if (isReady === false) {
+        clearInterval(time)
+      }
+      verify()
+    }, 2000)
+
   }
 
   function verify() {
@@ -50,9 +40,8 @@ export default function USMENU({ navigation }) {
         idCorrida: corridaData.corrida.idCorrida,
       }).then(function (response) {
         if (response.status === 200) {
-          isReady = false;
-          Alert.alert('Avalie o motorista ')
-          navigation.dispatch(StackActions.replace("UMenu"))
+          isReady = false
+          navigation.navigate(("UMenu"))
         }
       }).catch(function (error) { });
 
