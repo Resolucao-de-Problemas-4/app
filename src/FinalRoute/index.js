@@ -11,11 +11,12 @@ import {
     Modal,
     Dimensions,
 } from "react-native";
+
 import { Alert, BackHandler } from "react-native";
 import MapView from "react-native-maps";
 import { tokenInfoCliente, tokenInfoMotorista } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-
+import {StackActions} from '@react-navigation/native'
 import * as Location from "expo-location";
 import axios from "axios";
 import { API_REST } from "../api/api";
@@ -27,7 +28,7 @@ export default function DSMenu({ navigation }) {
     const [idCorrida, setIdCorrida] = useState(null);
     const [driverOrigin, setDriverOrigin] = useState(null);
     const [userDestination, setUserDestination] = useState(null);
-
+    const [userBuscado, setUserBuscado] = useState(null)
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => true);
@@ -54,9 +55,16 @@ export default function DSMenu({ navigation }) {
                 longitudeDelta: 0.000621,
             });
 
+            setUserBuscado({
+              latitude: Number(corridaData.corrida.latitudeInicial),
+              longitude: Number(corridaData.corrida.longitudeInicial),
+              latitudeDelta: 0.000922,
+              longitudeDelta: 0.000621,  
+            })
+
             setUserDestination({
-                latitude: corridaData.corrida.latitudeFinal,
-                longitude: corridaData.corrida.longitudeFinal,
+                latitude: Number(corridaData.corrida.latitudeFinal),
+                longitude: Number(corridaData.corrida.longitudeFinal),
                 latitudeDelta: 0.000922,
                 longitudeDelta: 0.000621,
             });
@@ -71,36 +79,11 @@ export default function DSMenu({ navigation }) {
             corridaID: corridaData.corrida.idCorrida
         }).then(function (response){
             if(response.status ===200){
-                navigation.navigate('DMenu')
+                navigation.dispatch(StackActions.replace('DMenu'))
             }
         })
         
     }
-
-
-    //   function cancelarCorrida() {
-    //     //caso o cliente não queira mais que a corrida seja aceita, ele pode cancelar
-    //     if (idCorrida === "") {
-    //       Alert.alert("Nenhuma corrida registrada.");
-    //     } else {
-    //       axios
-    //         .post(API_REST + "" + PORT + "/api/race-cancel", {
-    //           idCorrida,
-    //         })
-    //         .then(function (response) {
-    //           if (response.status === 201) {
-    //             Alert.alert("Corrida Cancelada...");
-    //             navigation.navigate("UMenu");
-    //           } else if (response.status === 400) {
-    //             Alert.alert("erro");
-    //           }
-    //         })
-    //         .catch(function (error) {
-    //           console.log(error.message);
-    //         });
-    //     }
-    //   }
-
     return (
         <View>
             <View style={styles.container}>
@@ -113,12 +96,12 @@ export default function DSMenu({ navigation }) {
                 >
                     <MapViewDirections
                         lineDashPattern={[1]}
-                        origin={driverOrigin}
+                        origin={userBuscado}
                         destination={userDestination}
                         apikey={"AIzaSyD1u6IQERI6G3w8MhnvzPzh4NZSen9KO_U"}
                         strokeWidth={3}
 
-                        strokeColor="black"
+                        strokeColor="purple"
                         onReady={(result) => {
 
                             mapEl.current.fitToCoordinates(result.coordinates, {
