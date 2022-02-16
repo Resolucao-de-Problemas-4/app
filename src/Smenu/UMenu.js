@@ -28,32 +28,32 @@ export default function USMENU({ navigation }) {
   const [idCorrida, setIdCorrida] = useState(null);
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
-  var time = null
-      
+  const [time, setTime] = useState(null)
 
-  function intervalTIME(){
-    if(time === null || time === undefined ){
-      time = setInterval(function (){
-        
-        if(isReady === false){
+
+  function intervalTIME() {
+    if (time === null || time === undefined) {
+      setTime(setInterval(function () {
+
+        if (isReady === false) {
           clearInterval(time)
         }
         verify()
-      },1000)
+      }, 1000))
     }
   }
 
   function verify() {
     axios
       .post(API_REST + "" + PORT + "/api/race-verify-finish", {
-        idCorrida:corridaData.corrida.idCorrida,
+        idCorrida: corridaData.corrida.idCorrida,
       }).then(function (response) {
         if (response.status === 200) {
           isReady = false;
           Alert.alert('Avalie o motorista ')
           navigation.navigate("UMenu")
         }
-      }).catch(function (error) {});
+      }).catch(function (error) { });
 
   }
 
@@ -95,29 +95,6 @@ export default function USMENU({ navigation }) {
     })();
   }, []);
 
-  function cancelarCorrida() {
-    //caso o cliente não queira mais que a corrida seja aceita, ele pode cancelar
-    if (idCorrida === "") {
-      Alert.alert("Nenhuma corrida registrada.");
-    } else {
-      axios
-        .post(API_REST + "" + PORT + "/api/race-cancel", {
-          idCorrida,
-        })
-        .then(function (response) {
-          if (response.status === 201) {
-            isReady = false
-            Alert.alert("Corrida Cancelada...");
-            navigation.navigate("UMenu");
-          } else if (response.status === 400) {
-            Alert.alert("erro");
-          }
-        })
-        .catch(function (error) {
-        });
-    }
-  }
-
   return (
     <View>
       <View style={styles.container}>
@@ -128,7 +105,7 @@ export default function USMENU({ navigation }) {
           loadingEnabled={true}
           ref={mapEl}
         >
-          <MapViewDirections
+          {destination && (<MapViewDirections
             lineDashPattern={[1]}
             origin={origin}
             destination={destination}
@@ -145,8 +122,11 @@ export default function USMENU({ navigation }) {
                 },
               });
             }}
-          />
+          />)}
         </MapView>
+
+
+
 
         <View
           style={{
@@ -171,9 +151,6 @@ export default function USMENU({ navigation }) {
         </View>
       </View>
 
-      <View style={{ top: "180%", width: "30%", left: "35%" }}>
-        <Button title="cancelar" onPress={() => cancelarCorrida()} />
-      </View>
     </View>
   );
 }
