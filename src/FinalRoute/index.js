@@ -79,7 +79,7 @@ export default function DSMenu({ navigation }) {
             corridaID: corridaData.corrida.idCorrida
         }).then(function (response) {
             if (response.status === 200) {
-                navigation.dispatch(StackActions.replace('DMenu'))
+                navigation.navigate('DMenu')
             }
         })
 
