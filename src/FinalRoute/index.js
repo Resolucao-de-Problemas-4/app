@@ -16,7 +16,7 @@ import { Alert, BackHandler } from "react-native";
 import MapView from "react-native-maps";
 import { tokenInfoCliente, tokenInfoMotorista } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import {StackActions} from '@react-navigation/native'
+import { StackActions } from '@react-navigation/native'
 import * as Location from "expo-location";
 import axios from "axios";
 import { API_REST } from "../api/api";
@@ -56,10 +56,10 @@ export default function DSMenu({ navigation }) {
             });
 
             setUserBuscado({
-              latitude: Number(corridaData.corrida.latitudeInicial),
-              longitude: Number(corridaData.corrida.longitudeInicial),
-              latitudeDelta: 0.000922,
-              longitudeDelta: 0.000621,  
+                latitude: Number(corridaData.corrida.latitudeInicial),
+                longitude: Number(corridaData.corrida.longitudeInicial),
+                latitudeDelta: 0.000922,
+                longitudeDelta: 0.000621,
             })
 
             setUserDestination({
@@ -73,16 +73,16 @@ export default function DSMenu({ navigation }) {
         })();
     }, []);
 
-    function finalizarCorrida (){
-        axios.post(API_REST+""+PORT+'/api/race-finish', {
+    function finalizarCorrida() {
+        axios.post(API_REST + "" + PORT + '/api/race-finish', {
             token: tokenInfoMotorista.token,
             corridaID: corridaData.corrida.idCorrida
-        }).then(function (response){
-            if(response.status ===200){
+        }).then(function (response) {
+            if (response.status === 200) {
                 navigation.dispatch(StackActions.replace('DMenu'))
             }
         })
-        
+
     }
     return (
         <View>
@@ -96,6 +96,8 @@ export default function DSMenu({ navigation }) {
                 >
                     <MapViewDirections
                         lineDashPattern={[1]}
+                        lineCap={'square'}
+
                         origin={userBuscado}
                         destination={userDestination}
                         apikey={"AIzaSyD1u6IQERI6G3w8MhnvzPzh4NZSen9KO_U"}

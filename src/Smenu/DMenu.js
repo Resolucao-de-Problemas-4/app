@@ -14,7 +14,7 @@ import {
 import { Alert, BackHandler } from "react-native";
 
 import MapView from "react-native-maps";
-import { tokenInfoCliente } from "../token";
+import { tokenInfoCliente, tokenInfoMotorista } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 import * as Location from "expo-location";
@@ -28,7 +28,7 @@ export default function DSMenu({ navigation }) {
   const [idCorrida, setIdCorrida] = useState(null);
   const [driverOrigin, setDriverOrigin] = useState(null);
   const [userOrigin, setUserOrigin] = useState(null);
-
+  const [isReady, setIsReady] = useState(true)
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => true);
@@ -55,6 +55,20 @@ export default function DSMenu({ navigation }) {
         longitudeDelta: 0.00621,
       });
 
+      axios.post(API_REST+''+PORT+'/api/localization-update',{
+        token:tokenInfoMotorista.token,
+        lat: location.coords.latitude,
+        longitude:location.coords.longitude
+      }).then(function(response){
+        if(response.status(200)){
+          console.log('ihu')
+        }
+      }).catch(function(error){
+        console.log('aaa')
+      }).finally(function(){
+        console.log('a')
+      })
+
       setUserOrigin({
         latitude: Number(corridaData.corrida.latitudeInicial),
         longitude: Number(corridaData.corrida.longitudeInicial),
@@ -67,31 +81,12 @@ export default function DSMenu({ navigation }) {
   }, []);
 
   function changeRoute() {
+    setIsReady(false)
+    setTimeout(() => {
+
+    }, 1000);
     navigation.navigate('FinalRoute');
   }
-
-  //   function cancelarCorrida() {
-  //     //caso o cliente não queira mais que a corrida seja aceita, ele pode cancelar
-  //     if (idCorrida === "") {
-  //       Alert.alert("Nenhuma corrida registrada.");
-  //     } else {
-  //       axios
-  //         .post(API_REST + "" + PORT + "/api/race-cancel", {
-  //           idCorrida,
-  //         })
-  //         .then(function (response) {
-  //           if (response.status === 201) {
-  //             Alert.alert("Corrida Cancelada...");
-  //             navigation.navigate("UMenu");
-  //           } else if (response.status === 400) {
-  //             Alert.alert("erro");
-  //           }
-  //         })
-  //         .catch(function (error) {
-  //           console.log(error.message);
-  //         });
-  //     }
-  //   }
 
   return (
     <View>
@@ -110,7 +105,7 @@ export default function DSMenu({ navigation }) {
             apikey={"AIzaSyD1u6IQERI6G3w8MhnvzPzh4NZSen9KO_U"}
             strokeWidth={3}
 
-            strokeColor="black"
+            strokeColor="purple"
             onReady={(result) => {
 
               mapEl.current.fitToCoordinates(result.coordinates, {

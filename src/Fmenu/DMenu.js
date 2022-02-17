@@ -141,6 +141,20 @@ export default function Fmenu({ navigation }) {
               corridaData.corrida.latitudeInicial = data.corrida.latitudeOrigem;
             });
 
+
+          axios.post(API_REST + '' + PORT + '/api/localization-create', {
+            token: tokenInfoMotorista.token,
+            lat: origin.latitude,
+            long: origin.longitude,
+            corridaID: corridaData.corrida.idCorrida
+          }).then(function (response) { 
+            
+            console.log(response.statusText)
+
+          }).catch(function (error) {
+
+          })
+
           navigation.navigate("DSMenu");
         } else if (response.status === 400) {
           alert.Alert(response.data.message);
@@ -168,7 +182,7 @@ export default function Fmenu({ navigation }) {
     corridaData.corrida.longitudeInicial = "";
     corridaData.corrida.latitudeInicial = "";
 
-     console.log(JSON.stringify(deniedList))
+    console.log(JSON.stringify(deniedList))
     search();
   }
 

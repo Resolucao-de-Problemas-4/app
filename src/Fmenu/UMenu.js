@@ -200,11 +200,12 @@ export default function Fmenu({ navigation }) {
         >
           <MapViewDirections
             lineDashPattern={[1]}
+            lineCap={'square'}
             origin={origin}
             destination={destination}
             apikey={"AIzaSyD1u6IQERI6G3w8MhnvzPzh4NZSen9KO_U"}
             strokeWidth={3}
-            strokeColor="black"
+            strokeColor="purple"
             onReady={(result) => {
               setDistance(result.distance);
               setPlaces(false);
