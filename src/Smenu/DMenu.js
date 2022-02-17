@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Alert, BackHandler } from "react-native";
 
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { tokenInfoCliente, tokenInfoMotorista } from "../token";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
@@ -46,7 +46,7 @@ export default function DSMenu({ navigation }) {
         return;
       }
 
-      const location = await Location.getCurrentPositionAsync({});
+      var location = await Location.getCurrentPositionAsync({ timeInterval: 1000, distanceInterval: 3 });
 
       setDriverOrigin({
         latitude: location.coords.latitude,
@@ -54,20 +54,6 @@ export default function DSMenu({ navigation }) {
         latitudeDelta: 0.00922,
         longitudeDelta: 0.00621,
       });
-
-      axios.post(API_REST+''+PORT+'/api/localization-update',{
-        token:tokenInfoMotorista.token,
-        lat: location.coords.latitude,
-        longitude:location.coords.longitude
-      }).then(function(response){
-        if(response.status(200)){
-          console.log('ihu')
-        }
-      }).catch(function(error){
-        console.log('aaa')
-      }).finally(function(){
-        console.log('a')
-      })
 
       setUserOrigin({
         latitude: Number(corridaData.corrida.latitudeInicial),
@@ -96,6 +82,26 @@ export default function DSMenu({ navigation }) {
           initialRegion={driverOrigin}
           showsUserLocation={true}
           loadingEnabled={true}
+          onUserLocationChange={(e) => {
+
+            setDriverOrigin({
+              latitude: e.nativeEvent.coordinate.latitude,
+              longitude: e.nativeEvent.coordinate.longitude,
+              latitudeDelta: 0.00922,
+              longitudeDelta: 0.00621,
+            })
+
+            axios.post(API_REST + '' + PORT + '/api/localization-update', {
+              token: tokenInfoMotorista.token,
+              lat: JSON.parse(e.nativeEvent.coordinate.latitude),
+              long: JSON.parse(e.nativeEvent.coordinate.longitude)
+            }).then(function (response) {
+
+            }).catch(function (error) {
+              console.log(error)
+            })
+
+          }}
           ref={mapEl}
         >
           <MapViewDirections
@@ -118,6 +124,14 @@ export default function DSMenu({ navigation }) {
               });
             }}
           />
+          {userOrigin && (<Marker
+            coordinate={{ latitude: userOrigin.latitude, longitude: userOrigin.longitude }}
+            pinColor={"purple"}
+            title={"Partida"}
+            description={"Eu estou aqui!!"}
+
+          />)}
+
         </MapView>
 
 
