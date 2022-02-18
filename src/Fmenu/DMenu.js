@@ -54,7 +54,6 @@ export default function Fmenu({ navigation }) {
         return;
       }
       let location = await Location.getCurrentPositionAsync({});
-
       setOrigin({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -139,21 +138,23 @@ export default function Fmenu({ navigation }) {
               corridaData.corrida.longitudeFinal = data.corrida.longitudeFinal;
               corridaData.corrida.longitudeInicial = data.corrida.longitudeOrigem;
               corridaData.corrida.latitudeInicial = data.corrida.latitudeOrigem;
+
+              axios.post(API_REST + '' + PORT + '/api/localization-create', {
+                token: tokenInfoMotorista.token,
+                lat: origin.latitude,
+                long: origin.longitude,
+                corridaID: corridaData.corrida.idCorrida
+              }).then(function (response) {
+
+                console.log(response.statusText)
+              }).catch(function (error) {
+                console.log(error)
+              })
+
             });
 
 
-          axios.post(API_REST + '' + PORT + '/api/localization-create', {
-            token: tokenInfoMotorista.token,
-            lat: origin.latitude,
-            long: origin.longitude,
-            corridaID: corridaData.corrida.idCorrida
-          }).then(function (response) { 
-            
-            console.log(response.statusText)
 
-          }).catch(function (error) {
-
-          })
 
           navigation.navigate("DSMenu");
         } else if (response.status === 400) {
@@ -165,7 +166,7 @@ export default function Fmenu({ navigation }) {
   }
 
   function decline() {
-    setDeniedList(deniedlist.push({ corridaID: idCorrida }));
+    setDeniedList(deniedList.push({ corridaID: idCorrida }));
 
     corridaData.motorista.phoneNumber = "";
     corridaData.motorista.email = "";
