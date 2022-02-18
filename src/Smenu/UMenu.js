@@ -26,6 +26,7 @@ export default function USMENU({ navigation }) {
   const [position, setPosition] = useState()
   const [localization, setLocalization] = useState()
   const [counter, setCounter] = useState(0)
+  const [pin, setPin] = useState(false)
 
   function intervalTIME() {
     if (time === null || time === undefined) {
@@ -63,14 +64,23 @@ export default function USMENU({ navigation }) {
           latitude: response.data.lat,
           longitude: response.data.long
         })
-
-        if (counter === 0 && response.data.route === 2) {
+        if (counter === 0 && response.data.route === 1) {
           setDestination({
-            latitude: corridaData.corrida.latitudeFinal,
-            longitude: corridaData.corrida.longitudeFinal,
+            latitude: localization.latitude,
+            longitude: localization.longitude,
             latitudeDelta: 0.00922,
             longitudeDelta: 0.00621,
           })
+        }
+
+        if (counter === 0 && response.data.route === 2) {
+          setDestination({
+            latitude: Number(corridaData.corrida.latitudeFinal),
+            longitude: Number(corridaData.corrida.longitudeFinal),
+            latitudeDelta: 0.00922,
+            longitudeDelta: 0.00621,
+          })
+          setPin(true)
           setCounter(counter++)
         }
 
@@ -138,13 +148,18 @@ export default function USMENU({ navigation }) {
         latitudeDelta: 0.00922,
         longitudeDelta: 0.00621,
       });
+      axios
+        .post(API_REST + "" + PORT + "/api/localization", {
+          token: tokenInfoCliente.token,
+        }).then(function (response) {
+          setDestination({
+            latitude: response.data.lat,
+            longitude: response.data.long,
+            latitudeDelta: 0.00922,
+            longitudeDelta: 0.00621,
+          })
+        })
 
-      setDestination({
-        latitude: Number(corridaData.corrida.latitudeFinal),
-        longitude: Number(corridaData.corrida.longitudeFinal),
-        latitudeDelta: 0.00922,
-        longitudeDelta: 0.00621,
-      });
 
 
     })();
@@ -190,6 +205,16 @@ export default function USMENU({ navigation }) {
           >
 
             <Image source={require('../../assets/pikachu.png')} style={{ height: 35, width: 35 }}></Image>
+
+          </Marker>)}
+
+          {pin && (<Marker
+            coordinate={{ latitude: Number(corridaData.corrida.latitudeFinal), longitude: Number(corridaData.corrida.longitudeFinal) }}
+            pinColor={'red'}
+            title={"Destino"}
+            description={"Já já você estará aqui"}
+          >
+
 
           </Marker>)}
 

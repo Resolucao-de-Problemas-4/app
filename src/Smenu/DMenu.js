@@ -68,7 +68,9 @@ export default function DSMenu({ navigation }) {
 
   function changeRoute() {
     setIsReady(false)
-    axios.post(API_REST + '' + PORT + '/api/localization-route-change', { token: tokenInfoMotorista.token })
+    axios.post(API_REST + '' + PORT + '/api/localization-route-change', { token: tokenInfoMotorista.token }).then(function(response){
+      console.log()
+    })
     setTimeout(() => {
 
     }, 1000);
