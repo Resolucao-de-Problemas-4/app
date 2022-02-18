@@ -5,7 +5,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
+  Dimensions, Image
 } from "react-native";
 import { Alert, BackHandler } from "react-native";
 import MapView, { Marker } from "react-native-maps";
@@ -24,7 +24,7 @@ export default function USMENU({ navigation }) {
   const [destination, setDestination] = useState(null);
   const [time, setTime] = useState()
   const [position, setPosition] = useState()
-  const [localization, setLocalization]= useState()
+  const [localization, setLocalization] = useState()
 
   function intervalTIME() {
     if (time === null || time === undefined) {
@@ -179,7 +179,11 @@ export default function USMENU({ navigation }) {
             title={"Motorista"}
             description={"Seu motorista está aqui"}
 
-          />)}
+          >
+
+            <Image source={require('../../assets/pikachu.png')} style = {{height:35,width:35}}></Image>
+
+          </Marker>)}
 
         </MapView>
 
