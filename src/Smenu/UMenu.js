@@ -8,12 +8,13 @@ import {
   Dimensions,
 } from "react-native";
 import { Alert, BackHandler } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import axios from "axios";
 import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { corridaData } from "../token/corrida";
+import { tokenInfoCliente } from '../token/index'
 
 export default function USMENU({ navigation }) {
   const [isReady, setIsReady] = useState(true)
@@ -22,6 +23,8 @@ export default function USMENU({ navigation }) {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [time, setTime] = useState()
+  const [position, setPosition] = useState()
+  const [localization, setLocalization]= useState()
 
   function intervalTIME() {
     if (time === null || time === undefined) {
@@ -34,6 +37,39 @@ export default function USMENU({ navigation }) {
     }
   }
 
+  function intervalTIMEZ() {
+    if (position === null || position === undefined) {
+      setPosition(setInterval(function () {
+        if (isReady === false) {
+          setPosition(clearInterval(position))
+        }
+        getPos()
+      }, 2000))
+    }
+  }
+
+  function getPos() {
+    axios
+      .post(API_REST + "" + PORT + "/api/localization", {
+        token: tokenInfoCliente.token,
+      }).then(function (response) {
+
+        // setPosition({
+        //   latitude: response.data.lat,
+        //   longitude: response.data.long
+        // })
+        setLocalization({
+          latitude: response.data.lat,
+          longitude: response.data.long
+        })
+
+
+
+      }).catch(function (error) { });
+  }
+
+
+
   function verify() {
 
     axios
@@ -42,7 +78,6 @@ export default function USMENU({ navigation }) {
       }).then(function (response) {
         setIsReady(false)
 
-        Alert.alert('Pronto!')
 
         corridaData.motorista.name = ''
         corridaData.motorista.phoneNumber = ''
@@ -59,6 +94,7 @@ export default function USMENU({ navigation }) {
         corridaData.corrida.longitudeFinal = ''
         corridaData.corrida.longitudeInicial = ''
         corridaData.corrida.latitudeInicial = ''
+        Alert.alert('Pronto!')
 
         navigation.navigate("UMenu")
 
@@ -71,6 +107,7 @@ export default function USMENU({ navigation }) {
     BackHandler.addEventListener("hardwareBackPress", () => true);
     setIdCorrida(corridaData.corrida.idCorrida);
     intervalTIME()
+    intervalTIMEZ()
     return () =>
       BackHandler.removeEventListener("hardwareBackPress", () => true);
   }, []);
@@ -104,6 +141,8 @@ export default function USMENU({ navigation }) {
     })();
   }, []);
 
+
+
   return (
     <View>
       <View style={styles.container}>
@@ -132,6 +171,16 @@ export default function USMENU({ navigation }) {
               });
             }}
           />)}
+
+
+          {localization && (<Marker
+            coordinate={{ latitude: localization.latitude, longitude: localization.longitude }}
+            pinColor={'red'}
+            title={"Motorista"}
+            description={"Seu motorista está aqui"}
+
+          />)}
+
         </MapView>
 
 
