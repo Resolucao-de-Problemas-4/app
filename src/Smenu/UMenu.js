@@ -25,6 +25,7 @@ export default function USMENU({ navigation }) {
   const [time, setTime] = useState()
   const [position, setPosition] = useState()
   const [localization, setLocalization] = useState()
+  const [counter, setCounter] = useState(0)
 
   function intervalTIME() {
     if (time === null || time === undefined) {
@@ -63,7 +64,15 @@ export default function USMENU({ navigation }) {
           longitude: response.data.long
         })
 
-
+        if (counter === 0 && response.data.route === 2) {
+          setDestination({
+            latitude: corridaData.corrida.latitudeFinal,
+            longitude: corridaData.corrida.longitudeFinal,
+            latitudeDelta: 0.00922,
+            longitudeDelta: 0.00621,
+          })
+          setCounter(counter++)
+        }
 
       }).catch(function (error) { });
   }
@@ -178,10 +187,9 @@ export default function USMENU({ navigation }) {
             pinColor={'red'}
             title={"Motorista"}
             description={"Seu motorista está aqui"}
-
           >
 
-            <Image source={require('../../assets/pikachu.png')} style = {{height:35,width:35}}></Image>
+            <Image source={require('../../assets/pikachu.png')} style={{ height: 35, width: 35 }}></Image>
 
           </Marker>)}
 
