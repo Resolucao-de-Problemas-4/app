@@ -198,12 +198,12 @@ export default function Fmenu({ navigation }) {
           loadingEnabled={true}
           onUserLocationChange={(e) => {
             e.persist()
-            setOrigin({
-              latitude: e.nativeEvent.coordinate.latitude,
-              longitude: e.nativeEvent.coordinate.longitude,
-              latitudeDelta: 0.000922,
-              longitudeDelta: 0.000621,
-            })
+            // setOrigin({
+            //   latitude: e.nativeEvent.coordinate.latitude,
+            //   longitude: e.nativeEvent.coordinate.longitude,
+            //   latitudeDelta: 0.000922,
+            //   longitudeDelta: 0.000621,
+            // })
 
           }}
           ref={mapEl}
