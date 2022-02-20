@@ -32,9 +32,9 @@ export default function Fmenu({ navigation }) {
   const [distance, setDistance] = useState(null);
   const [price, setPrice] = useState(null);
   const [destino, setDestino] = useState('')
-  const [isReady, setIsReady] = useState(false)
+  var isReady = false;
   const mapEl = useRef(null);
-  const [idCorrida, setIdCorrida] = useState('')
+  var idCorrida =''
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [places, setPlaces] = useState(true)
@@ -64,9 +64,9 @@ export default function Fmenu({ navigation }) {
       })
       .then(function (response) {
         if (response.status === 200) {
-          setIdCorrida(response.data.corridaID);
-          console.log(idCorrida);
-          setIsReady(true)
+          idCorrida = response.data.corridaID
+          console.log(response.data.corridaID);
+          isReady = true
           intervalTIME()
           setModalV(false);
           Alert.alert("Corrida criada 😁");
@@ -95,7 +95,6 @@ export default function Fmenu({ navigation }) {
       })
       .then(function (response) {
         if (response.status === 200) {
-          setIsReady(false)
           Alert.alert("Um motorista aceitou a sua corrida! 🚗");
           const data = response.data;
           corridaData.motorista.name = data.motorista.name;
@@ -113,9 +112,13 @@ export default function Fmenu({ navigation }) {
           corridaData.corrida.longitudeFinal = data.corrida.longitudeFinal
           corridaData.corrida.longitudeInicial = data.corrida.longitudeOrigem
           corridaData.corrida.latitudeInicial = data.corrida.latitudeOrigem
-          navigation.dispatch(StackActions.replace("USMenu"));
+          isReady = false
+          clearInterval(time)
+          idCorrida=''
+          navigation.navigate("USMenu");
         } else if (response.status === 201) { }
       }).catch(function (error) {
+        console.log('err')
       });
   }
 
@@ -158,8 +161,8 @@ export default function Fmenu({ navigation }) {
           if (response.status === 201) {
             setDestination(null)
             Alert.alert("Corrida Cancelada...");
-            setIsReady(false)
-            setIdCorrida('')
+            isReady = false
+            idCorrida = ''
           } else if (response.status === 400) {
             Alert.alert("erro");
           }
@@ -182,7 +185,7 @@ export default function Fmenu({ navigation }) {
     tokenInfoCliente.name = "";
     tokenInfoCliente.token = "";
     tokenInfoCliente.cnh = "";
-    setIsReady(false)
+    isReady = false
 
     navigation.navigate("Home");
   }
@@ -372,7 +375,7 @@ export default function Fmenu({ navigation }) {
 
           onPress={(data, details = null) => {
 
-           setDestino(details.formatted_address);
+            setDestino(details.formatted_address);
             setDestination({
               latitude: details.geometry.location.lat,
               longitude: details.geometry.location.lng,

@@ -15,6 +15,7 @@ import { API_REST } from "../api/api";
 import { PORT } from "../api/port";
 import { corridaData } from "../token/corrida";
 import { tokenInfoCliente } from '../token/index'
+import { StackActions } from "@react-navigation/native";
 
 export default function USMENU({ navigation }) {
   const [isReady, setIsReady] = useState(true)
@@ -81,7 +82,7 @@ export default function USMENU({ navigation }) {
             longitudeDelta: 0.00621,
           })
           setPin(true)
-          setCounter(counter++)
+          setCounter(1)
         }
 
       }).catch(function (error) { });
@@ -113,9 +114,9 @@ export default function USMENU({ navigation }) {
         corridaData.corrida.longitudeFinal = ''
         corridaData.corrida.longitudeInicial = ''
         corridaData.corrida.latitudeInicial = ''
-        Alert.alert('Pronto!')
+        Alert.alert('Corrida Finalizada!')
 
-        navigation.navigate("UMenu")
+        navigation.dispatch(StackActions.replace("UMenu"))
 
       }).catch(function (error) { });
 
