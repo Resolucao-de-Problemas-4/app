@@ -183,7 +183,6 @@ export default function Fmenu({ navigation }) {
     corridaData.corrida.longitudeInicial = "";
     corridaData.corrida.latitudeInicial = "";
 
-    console.log(JSON.stringify(deniedList))
     search();
   }
 
@@ -197,7 +196,7 @@ export default function Fmenu({ navigation }) {
           loadingEnabled={true}
           ref={mapEl}
         >
-          <MapViewDirections
+          {/* <MapViewDirections
             lineDashPattern={[1]}
             origin={origin}
             destination={destination}
@@ -216,7 +215,7 @@ export default function Fmenu({ navigation }) {
                 },
               });
             }}
-          />
+          /> */}
         </MapView>
       </View>
 

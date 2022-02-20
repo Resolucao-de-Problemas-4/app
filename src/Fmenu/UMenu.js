@@ -196,6 +196,16 @@ export default function Fmenu({ navigation }) {
           initialRegion={origin}
           showsUserLocation={true}
           loadingEnabled={true}
+          onUserLocationChange={(e) => {
+            e.persist()
+            setOrigin({
+              latitude: e.nativeEvent.coordinate.latitude,
+              longitude: e.nativeEvent.coordinate.longitude,
+              latitudeDelta: 0.000922,
+              longitudeDelta: 0.000621,
+            })
+
+          }}
           ref={mapEl}
         >
           <MapViewDirections
@@ -354,13 +364,13 @@ export default function Fmenu({ navigation }) {
             keyboardShouldPersistTaps: "handled",
           }}
         />
-     </View>)}
+      </View>)}
 
       {places && origin && initialPlace && (<View style={{ flex: 1, bottom: 70, position: 'absolute', width: '75%', left: 30 }}>
-          <GooglePlacesAutocomplete
+        <GooglePlacesAutocomplete
           minLength={5}
           placeholder="Para onde vamos?"
-          
+
           onPress={(data, details = null) => {
 
             destino = details.formatted_address;
@@ -383,7 +393,7 @@ export default function Fmenu({ navigation }) {
             listView: styles.listView,
             keyboardShouldPersistTaps: "handled",
           }}
-          
+
         />
 
 
